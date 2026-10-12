@@ -1,0 +1,96 @@
+####Create User ################
+POST https://salty-headland-03110-6f6b16cfd8df.herokuapp.com/users
+Content-Type: application/json
+
+{
+    "name":"admin2",
+    "email":"admin2@gmail.com",
+    "password":"CHANGE_ME",
+    "confPassword":"CHANGE_ME",
+    "role":"admin"
+
+}
+
+
+###
+//Login user
+POST https://salty-headland-03110-6f6b16cfd8df.herokuapp.com/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"123456"
+  
+}
+
+####### Upload HCProviders JSON ##############
+POST https://salty-headland-03110-6f6b16cfd8df.herokuapp.com/HCProviders_json
+Content-Type: multipart/form-data; boundary=MultipartBoundry
+
+--MultipartBoundry
+Content-Disposition: form-data; name="file"; filename="hcproviders_corrected.json"
+Content-Type: application/json
+
+< ./hcproviders_corrected.json
+--MultipartBoundry--
+
+
+
+
+### Localhost Login 
+//Login user
+POST  http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"123456"
+  
+}
+
+
+
+
+####### Localhost upload HCProviders JSON ##############
+POST http://localhost:5000/HCProviders_json
+Content-Type: multipart/form-data; boundary=MultipartBoundry
+
+--MultipartBoundry
+Content-Disposition: form-data; name="file"; filename="hcproviders.json"
+Content-Type: application/json
+
+< ./hcproviders.json
+--MultipartBoundry--
+
+
+
+###
+//get hospitals by id
+GET http://localhost:5000/hcpInfo
+
+
+#####
+POST http://localhost:5000/hcpInfo_json
+Content-Type: multipart/form-data; boundary=MultipartBoundry
+ 
+--MultipartBoundry
+Content-Disposition: form-data; name="file"; filename="hcpInfo.json"
+Content-Type: application/json
+ 
+< ./hcpInfo.json
+--MultipartBoundry--
+
+
+
+####### Upload hcpInfo JSON ##############
+POST https://salty-headland-03110-6f6b16cfd8df.herokuapp.com/hcpInfo_json
+Content-Type: multipart/form-data; boundary=MultipartBoundry
+
+--MultipartBoundry
+Content-Disposition: form-data; name="file"; filename="hcpinfo4.json"
+Content-Type: application/json
+
+< ./hcpinfo4.json
+--MultipartBoundry--
+
+

@@ -1,0 +1,55 @@
+####Create User ################
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name":"admin",
+    "email":"admin@gmail.com",
+    "password":"123456",
+    "confPassword":"123456",
+    "role":"admin"
+
+}
+
+
+###
+//Login user
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"123456"
+  
+}
+###
+//Logi user role hcp
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email":"apalios@gmail.com",
+    "password":"123456"
+  
+}
+
+
+###
+//Logi user role hcp
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email":"ippo@gmail.com",
+    "password":"123456"
+  
+}
+
+
+
+
+###
+GET http://localhost:5000/hcproviders
+
+
+

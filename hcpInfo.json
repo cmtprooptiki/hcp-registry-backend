@@ -1,0 +1,259 @@
+[
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Paediatric Hematology and Oncology",
+  "Number_Of_Beds": 56,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Special Infectious Diseases",
+  "Number_Of_Beds": 18,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Neurology ",
+  "Number_Of_Beds": 9,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Paediatrics",
+  "Number_Of_Beds": 181,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Paediatric Cardiology",
+  "Number_Of_Beds": 20,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Neurosurgery ",
+  "Number_Of_Beds": 13,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Urology ",
+  "Number_Of_Beds": 7,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Opthalmology ",
+  "Number_Of_Beds": 12,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Paediatric Orthopedics",
+  "Number_Of_Beds": 29,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Paediatric Surgery ",
+  "Number_Of_Beds": 32,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Plastic Surgery ",
+  "Number_Of_Beds": 11,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "ENT ",
+  "Number_Of_Beds": 20,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Psychiatric",
+  "Department": "Child Psyciatry ",
+  "Number_Of_Beds": 10,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Neonatal Intensive Care Unit (NICU)",
+  "Unit": "High-Dependency Unit (HDU)",
+  "Number_Of_Beds": 20,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Neonatal Intensive Care Unit (NICU)",
+  "Unit": "Intensive Care Unit (ICU)",
+  "Number_Of_Beds": 40,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "None",
+  "Unit": "Hematopoietic Stem Cell Transplantation",
+  "Number_Of_Beds": 17,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Neonatology",
+  "Unit": "High-Dependency Unit (HDU)",
+  "Number_Of_Beds": 30,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Pediatric Intensive Care Unit (PICU)",
+  "Unit": "High-Dependency Unit (HDU)",
+  "Number_Of_Beds": 0,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Pediatric Intensive Care Unit (PICU)",
+  "Unit": "Pediatric Intensive Care Unit (PICU)",
+  "Number_Of_Beds": 10,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Surgical",
+  "Department": "Thoracic Surgery",
+  "Unit": "Intensive Care Unit (ICU)",
+  "Number_Of_Beds": 6,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Cross-sectoral",
+  "Department": "Day- care ",
+  "Unit": "Day- care",
+  "Number_Of_Beds": 18,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Cross-sectoral",
+  "Department": "Accident and Emergency ",
+  "Unit": "Day- care",
+  "Number_Of_Beds": 5,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Pediatric Hematology and Oncology",
+  "Unit": "Day- care",
+  "Number_Of_Beds": 16,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Immunology",
+  "Unit": "Day- care",
+  "Number_Of_Beds": 0,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "NONE",
+  "Unit": "Day- care",
+  "Number_Of_Beds": 8,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "NONE",
+  "Unit": "Hematopoietic Stem Cell Transplantation",
+  "Number_Of_Beds": 4,
+  "hcp_id": 1
+ },
+ {
+  "Q4ALL_code": "Y1_H001",
+  "ype": "1st Health Region",
+  "Name_EN": "General Children's Hospital \"Agia Sofia\"",
+  "Sector": "Medical",
+  "Department": "Thalassemia and Sickle Cell Disease",
+  "Unit": "Day Care Hospitalization",
+  "Number_Of_Beds": 40,
+  "hcp_id": 1
+ }
+]
