@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import Dimoi from "../models/DimoiModel.js";
 import Oikismoi from "../models/OikismoiModel.js";
+import DimotikesEnotites from "../models/DimotikesEnotitesModel.js";
 import { findDimos } from "../utils/dimoiLookup.js";
 
 // Municipalities whose name exists in more than one region (e.g. ΗΡΑΚΛΕΙΟΥ in Attica and Crete)
@@ -15,7 +16,7 @@ const withLabels = (rows) => {
 };
 
 // GET /dimoi -> list of municipalities (region id, regional unit code, population, island / mountain
-// flags, ΠΦΥ structure counts, number of settlements), without boundaries
+// flags, ΠΦΥ structure counts, number of municipal units and settlements), without boundaries
 export const getDimoi = async (req, res) => {
     try {
         const settlements = await Oikismoi.findAll({
@@ -24,6 +25,12 @@ export const getDimoi = async (req, res) => {
             raw: true,
         });
         const settlementCount = Object.fromEntries(settlements.map((s) => [s.dimos_code, Number(s.count)]));
+        const units = await DimotikesEnotites.findAll({
+            attributes: ["dimos_code", [Sequelize.fn("COUNT", Sequelize.col("code")), "count"]],
+            group: ["dimos_code"],
+            raw: true,
+        });
+        const unitCount = Object.fromEntries(units.map((u) => [u.dimos_code, Number(u.count)]));
         const rows = await Dimoi.findAll({
             attributes: [
                 "code", "name", "perifereia", "perifereia_id", "pe_code", "population",
@@ -38,6 +45,7 @@ export const getDimoi = async (req, res) => {
             ...row,
             ...Object.fromEntries(flags.map((flag) => [flag, row[flag] === null ? null : Boolean(row[flag])])),
             oikismoi_count: settlementCount[row.code] || 0,
+            de_count: unitCount[row.code] || 0,
         })));
     } catch (error) {
         res.status(500).json({ msg: error.message });
@@ -69,8 +77,8 @@ export const getDimoiGeometry = async (req, res) => {
     }
 };
 
-// GET /dimoi/at?lat=35.36&lon=24.47 -> the municipality at that point (e.g. where the user clicked
-// on the map). Same lookup as for providers: inside the boundary, else the nearest within 3 km.
+// GET /dimoi/at?lat=35.36&lon=24.47 -> the municipality (and municipal unit) at that point.
+// Same lookup as for providers: inside a municipal unit, else the nearest within 3 km.
 export const getDimosAt = async (req, res) => {
     try {
         const lat = Number(req.query.lat);
@@ -80,7 +88,9 @@ export const getDimosAt = async (req, res) => {
         }
         const found = await findDimos(lat, lon);
         if (!found) return res.status(404).json({ msg: "No municipality at this point" });
-        res.status(200).json({ code: found.code, name: found.name });
+        res.status(200).json({
+            code: found.code, name: found.name, de_code: found.de_code, dimotiki_enotita: found.dimotiki_enotita,
+        });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }

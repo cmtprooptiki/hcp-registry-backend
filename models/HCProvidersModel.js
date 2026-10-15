@@ -116,7 +116,19 @@ const HCProviders = db.define('HCProviders', {
         type: DataTypes.STRING(4),
         allowNull: true
     },
-    // Settlement (Οικισμός): the nearest settlement of the municipality, filled automatically
+    // Municipal unit (Δημοτική Ενότητα), filled automatically from lat/lon (see utils/dimoiLookup.js);
+    // de_code -> DimotikesEnotites.code
+    dimotiki_enotita:
+    {
+        type: DataTypes.STRING(250),
+        allowNull: true
+    },
+    de_code:
+    {
+        type: DataTypes.STRING(6),
+        allowNull: true
+    },
+    // Settlement (Οικισμός): the nearest settlement of the municipal unit, filled automatically
     // (see utils/oikismoiLookup.js); oikismos_id -> Oikismoi.id
     oikismos:
     {

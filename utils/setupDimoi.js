@@ -1,57 +1,63 @@
-// Runs once at startup, after db.sync():
+// Runs once at startup, after db.sync() (see index.js), before the municipal units:
 //  1. fills the Perifereies (regions), PerifereiakesEnotites (regional units) and Dimoi
-//     (municipalities) tables from data/*.json (if they are empty or out of date) and links
-//     them: region -> regional units -> municipalities
+//     (municipalities) tables from data/*.json and links them: region -> regional units ->
+//     municipalities. A table is loaded again when it is incomplete or its data file changed
+//     (versions in the DataVersions table, see utils/dataVersions.js).
 //  2. adds missing columns to existing tables (db.sync() creates new tables but never
 //     adds columns to existing ones): Dimoi.perifereia_id / pe_code, HCProviders.dimos / dimos_code
-//  3. fills dimos / dimos_code for providers that don't have one yet, from their lat/lon
-import fs from "fs";
+//
+// The municipality of each provider is set by utils/setupPlaces.js (from the municipal units).
 import { DataTypes } from "sequelize";
 import db from "../config/Database.js";
 import Perifereies from "../models/PerifereiesModel.js";
 import PerifereiakesEnotites from "../models/PerifereiakesEnotitesModel.js";
 import Dimoi from "../models/DimoiModel.js";
 import HCProviders from "../models/HCProvidersModel.js";
-import { clearDimoiCache, dimosFields } from "./dimoiLookup.js";
-
-const readData = (file) => JSON.parse(fs.readFileSync(new URL(`../data/${file}`, import.meta.url), "utf8"));
+import { clearDimoiCache } from "./dimoiLookup.js";
+import { readDataFile, storedVersion, saveVersion } from "./dataVersions.js";
 
 // Extra municipality fields in data/dimoi.json (flags and ΠΦΥ structure counts)
 const DIMOS_DETAILS = ["nisiotikos", "mikros_nisiotikos", "oreinos", "pfy_ky", "pfy_pi", "pfy_ppi"];
 const pick = (object, keys) => Object.fromEntries(keys.map((key) => [key, object[key] ?? null]));
 
 const seedPerifereies = async () => {
-    const records = readData("perifereies.json");
-    if (await Perifereies.count() === records.length) return false;
-
+    const { records, version } = readDataFile("perifereies.json");
+    if (await Perifereies.count() === records.length && await storedVersion("perifereies.json") === version) {
+        return false;
+    }
     await Perifereies.bulkCreate(
         records.map(({ id, name, geometry }) => ({ id, name, geometry: JSON.stringify(geometry) })),
         { updateOnDuplicate: ["name", "geometry"] }
     );
+    await saveVersion("perifereies.json", version);
     return true;
 };
 
 const seedPerifereiakesEnotites = async () => {
-    const records = readData("perifereiakes_enotites.json");
-    if (await PerifereiakesEnotites.count() === records.length) return false;
-
+    const { records, version } = readDataFile("perifereiakes_enotites.json");
+    if (await PerifereiakesEnotites.count() === records.length &&
+        await storedVersion("perifereiakes_enotites.json") === version) {
+        return false;
+    }
     await PerifereiakesEnotites.bulkCreate(
         records.map(({ code, name, perifereia_id, geometry }) => ({
             code, name, perifereia_id, geometry: JSON.stringify(geometry),
         })),
         { updateOnDuplicate: ["name", "perifereia_id", "geometry"] }
     );
+    await saveVersion("perifereiakes_enotites.json", version);
     return true;
 };
 
 const seedDimoi = async () => {
-    const records = readData("dimoi.json");
+    const { records, version } = readDataFile("dimoi.json");
     const count = await Dimoi.count();
     const withoutRegion = await Dimoi.count({ where: { perifereia_id: null } });
     const withoutUnit = await Dimoi.count({ where: { pe_code: null } });
     const expectedWithoutUnit = records.filter((r) => !r.pe_code).length; // Mount Athos
     const withoutDetails = await Dimoi.count({ where: { pfy_pi: null } });
-    if (count === records.length && withoutRegion === 0 && withoutUnit === expectedWithoutUnit && withoutDetails === 0) {
+    if (count === records.length && withoutRegion === 0 && withoutUnit === expectedWithoutUnit &&
+        withoutDetails === 0 && await storedVersion("dimoi.json") === version) {
         return false;
     }
 
@@ -76,6 +82,7 @@ const seedDimoi = async () => {
         }),
         { updateOnDuplicate: ["name", "perifereia", "perifereia_id", "pe_code", "population", "geometry", ...DIMOS_DETAILS] }
     );
+    await saveVersion("dimoi.json", version);
     clearDimoiCache();
     return true;
 };
@@ -130,28 +137,8 @@ const ensureProviderColumns = async () => {
     }
 };
 
-// Fill dimos / dimos_code from lat/lon. onlyMissing=false recomputes every provider.
-export const assignDimoi = async ({ onlyMissing = true } = {}) => {
-    const providers = await HCProviders.findAll({
-        attributes: ["id", "Name_GR", "lat", "lon", "dimos_code"],
-        where: onlyMissing ? { dimos_code: null } : undefined,
-        raw: true,
-    });
-
-    let assigned = 0;
-    const unassigned = [];
-    for (const p of providers) {
-        const fields = await dimosFields(p.lat, p.lon);
-        if (fields.dimos_code) assigned++;
-        else unassigned.push(p);
-        if (!onlyMissing || fields.dimos_code) {
-            await HCProviders.update(fields, { where: { id: p.id }, silent: true });
-        }
-    }
-    return { checked: providers.length, assigned, unassigned };
-};
-
-// Steps 1 and 2: regions, regional units and municipalities filled and linked, provider columns in place
+// Regions, regional units and municipalities filled and linked, provider columns in place.
+// Returns true when a table was (re)loaded from its data file.
 export const prepareDimoiTables = async () => {
     await Perifereies.sync();
     await PerifereiakesEnotites.sync();
@@ -167,16 +154,10 @@ export const prepareDimoiTables = async () => {
 
 export const setupDimoi = async () => {
     const seeded = await prepareDimoiTables();
-    const { checked, assigned, unassigned } = await assignDimoi({ onlyMissing: true });
-
     console.log(
         `Regions: ${await Perifereies.count()}, regional units: ${await PerifereiakesEnotites.count()}, ` +
         `municipalities: ${await Dimoi.count()} loaded` +
-        (seeded ? " (tables filled from data/*.json)" : "") +
-        (checked ? `, municipality set for ${assigned} of ${checked} providers without one` : "")
+        (seeded ? " (tables filled from data/*.json)" : "")
     );
-    if (unassigned.length) {
-        console.log(`  ${unassigned.length} providers have coordinates outside every municipality, e.g. ` +
-            unassigned.slice(0, 3).map((p) => `#${p.id} ${p.Name_GR || ""} (${p.lat}, ${p.lon})`).join("; "));
-    }
+    return seeded;
 };

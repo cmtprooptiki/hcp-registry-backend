@@ -1,24 +1,31 @@
 import Oikismoi from "../models/OikismoiModel.js";
 import Dimoi from "../models/DimoiModel.js";
 
-const ATTRIBUTES = ["id", "name", "koinotita", "lat", "lon", "dimos_code"];
+const ATTRIBUTES = ["id", "name", "koinotita", "lat", "lon", "dimos_code", "de_code"];
 const asNumbers = (row) => ({ ...row, lat: Number(row.lat), lon: Number(row.lon) });
 
-// GET /oikismoi?dimos_code=7301,7302 -> the settlements of those municipalities
-// (id, name, koinotita, lat, lon, dimos_code), by name
+const codesFrom = (value) => String(value || "")
+    .split(",")
+    .map((code) => code.trim())
+    .filter(Boolean)
+    .slice(0, 100);
+
+// GET /oikismoi?dimos_code=7301,7302 -> the settlements of those municipalities, or
+// GET /oikismoi?de_code=730101 -> of those municipal units
+// (id, name, koinotita, lat, lon, dimos_code, de_code), by name
 export const getOikismoi = async (req, res) => {
     try {
-        const codes = String(req.query.dimos_code || "")
-            .split(",")
-            .map((code) => code.trim())
-            .filter(Boolean)
-            .slice(0, 100);
-        if (codes.length === 0) {
-            return res.status(400).json({ msg: "Give the municipality codes, e.g. ?dimos_code=7301,7302" });
+        const dimosCodes = codesFrom(req.query.dimos_code);
+        const unitCodes = codesFrom(req.query.de_code);
+        if (dimosCodes.length === 0 && unitCodes.length === 0) {
+            return res.status(400).json({ msg: "Give the municipality codes, e.g. ?dimos_code=7301,7302 (or ?de_code=730101)" });
         }
+        const where = {};
+        if (dimosCodes.length) where.dimos_code = dimosCodes;
+        if (unitCodes.length) where.de_code = unitCodes;
         const rows = await Oikismoi.findAll({
             attributes: ATTRIBUTES,
-            where: { dimos_code: codes },
+            where,
             order: [["name", "ASC"], ["id", "ASC"]],
             raw: true,
         });

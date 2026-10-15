@@ -15,9 +15,12 @@ import DimoiRoute from "./routes/DimoiRoute.js";
 import PerifereiesRoute from "./routes/PerifereiesRoute.js";
 import PerifereiakesEnotitesRoute from "./routes/PerifereiakesEnotitesRoute.js";
 import OikismoiRoute from "./routes/OikismoiRoute.js";
+import DimotikesEnotitesRoute from "./routes/DimotikesEnotitesRoute.js";
 import { setupDimoi } from "./utils/setupDimoi.js";
+import { prepareDimotikesEnotites } from "./utils/setupDimotikesEnotites.js";
 import { setupIatreia } from "./utils/setupIatreia.js";
-import { prepareOikismoiTables, setupOikismoi } from "./utils/setupOikismoi.js";
+import { prepareOikismoiTables } from "./utils/setupOikismoi.js";
+import { setupPlaces } from "./utils/setupPlaces.js";
 
 // Models (imported so they are registered before db.sync())
 import "./models/UserModel.js";
@@ -27,7 +30,9 @@ import "./models/hcpInfoModel.js";
 import "./models/PerifereiesModel.js";
 import "./models/PerifereiakesEnotitesModel.js";
 import "./models/DimoiModel.js";
+import "./models/DimotikesEnotitesModel.js";
 import "./models/OikismoiModel.js";
+import "./models/DataVersionsModel.js";
 
 dotenv.config();
 
@@ -82,6 +87,7 @@ app.use(DimoiRoute);
 app.use(PerifereiesRoute);
 app.use(PerifereiakesEnotitesRoute);
 app.use(OikismoiRoute);
+app.use(DimotikesEnotitesRoute);
 
 // Socket.IO setup
 const io = new Server(server, {
@@ -126,10 +132,12 @@ const PORT = process.env.PORT || process.env.APP_PORT || 5000;
     await db.authenticate();
     await db.sync();
     console.log("MySQL connected and models synced");
-    await setupDimoi();
-    await prepareOikismoiTables(); // settlements table + HCProviders settlement columns
-    await setupIatreia();
-    await setupOikismoi();         // settlement of providers without one
+    // areas first (parents before children), then the clinics, then the place of every provider
+    const seededAreas = await setupDimoi();                // regions, regional units, municipalities
+    const seededUnits = await prepareDimotikesEnotites();  // municipal units (Δημοτικές Ενότητες)
+    const seededSettlements = await prepareOikismoiTables(); // settlements (Οικισμοί)
+    const { moved } = await setupIatreia();                // regional clinics (ΠΙ / ΠΠΙ)
+    await setupPlaces({ recompute: seededAreas || seededUnits || seededSettlements || moved > 0 });
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}...`);

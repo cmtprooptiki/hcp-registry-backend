@@ -1,68 +1,57 @@
-// Recomputes the municipality (Δήμος) of EVERY provider from its lat/lon and prints
-// the providers worth checking by hand. The backend already does this automatically
-// for new/edited providers and, at startup, for providers without a municipality;
-// run this only to redo all of them (e.g. after fixing coordinates directly in the DB).
+// Recomputes the municipality (Δήμος), municipal unit (Δημοτική Ενότητα) and settlement (Οικισμός)
+// of EVERY provider from its lat/lon and prints the providers worth checking by hand. The backend
+// already does this automatically for new/edited providers and, at startup, for providers missing
+// one of them (and for all, when the boundaries or settlements change); run this only to redo all
+// of them (e.g. after fixing coordinates directly in the DB).
 //
 // Usage:
 //   node scripts/assign-dimoi.js            (update the database)
 //   node scripts/assign-dimoi.js --dry-run  (only show what would change)
 
 import db from "../config/Database.js";
+import "../models/DataVersionsModel.js";
 import HCProviders from "../models/HCProvidersModel.js";
 import { prepareDimoiTables } from "../utils/setupDimoi.js";
+import { prepareDimotikesEnotites } from "../utils/setupDimotikesEnotites.js";
+import { prepareOikismoiTables } from "../utils/setupOikismoi.js";
+import { assignPlaces } from "../utils/setupPlaces.js";
 import { findDimos } from "../utils/dimoiLookup.js";
-import { prepareOikismoiTables, assignOikismoi } from "../utils/setupOikismoi.js";
 
 const dryRun = process.argv.includes("--dry-run");
 
 try {
     await db.authenticate();
     await prepareDimoiTables();
+    await prepareDimotikesEnotites();
+    await prepareOikismoiTables();
 
-    const providers = await HCProviders.findAll({
-        attributes: ["id", "Name_GR", "lat", "lon", "dimos", "dimos_code"],
-        order: [["id", "ASC"]],
-        raw: true,
-    });
+    const { checked, changes, unplaced } = await assignPlaces({ all: true, dryRun });
 
-    let inside = 0, changed = 0;
+    // providers matched to the nearest municipal unit (outside every boundary, e.g. on the coast)
     const nearest = [];
-    const none = [];
-
-    for (const p of providers) {
+    const all = await HCProviders.findAll({ attributes: ["id", "Name_GR", "lat", "lon"], raw: true });
+    for (const p of all) {
         const found = await findDimos(p.lat, p.lon);
-        if (!found) none.push(p);
-        else if (found.method === "inside") inside++;
-        else nearest.push({ ...p, found });
-
-        const dimos = found ? found.name : null;
-        const dimos_code = found ? found.code : null;
-        if (dimos_code !== p.dimos_code || dimos !== p.dimos) {
-            changed++;
-            if (!dryRun) await HCProviders.update({ dimos, dimos_code }, { where: { id: p.id }, silent: true });
-        }
+        if (found && found.method === "nearest") nearest.push({ ...p, found });
     }
 
-    console.log(`${providers.length} providers: ${inside} inside a municipality, ` +
-        `${nearest.length} matched to the nearest boundary (coast), ${none.length} without municipality.`);
-    console.log(dryRun ? `${changed} would change (dry run, nothing written).` : `${changed} updated.`);
-
-    // The settlement depends on the municipality: recompute it for every provider
-    if (!dryRun) {
-        await prepareOikismoiTables();
-        await assignOikismoi({ onlyMissing: false });
-        console.log("Settlements recomputed for all providers.");
+    console.log(`${checked} providers: ${checked - nearest.length - unplaced.length} inside a municipal unit, ` +
+        `${nearest.length} matched to the nearest boundary (coast), ${unplaced.length} without municipality.`);
+    console.log(dryRun ? `${changes.length} would change (dry run, nothing written).` : `${changes.length} updated.`);
+    for (const { p, fields } of changes.filter(({ p, fields }) => p.dimos_code !== fields.dimos_code)) {
+        console.log(`  #${p.id} ${p.Name_GR}: municipality ${p.dimos || "-"} -> ${fields.dimos || "-"}`);
     }
 
     if (nearest.length) {
-        console.log("\nMatched to the nearest municipality (check if the distance is large):");
+        console.log("\nMatched to the nearest municipal unit (check if the distance is large):");
         nearest
             .sort((a, b) => b.found.distanceKm - a.found.distanceKm)
-            .forEach((p) => console.log(`  #${p.id}  ${p.found.distanceKm.toFixed(2)} km  ${p.found.name}  <-  ${p.Name_GR} (${p.lat}, ${p.lon})`));
+            .forEach((p) => console.log(`  #${p.id}  ${p.found.distanceKm.toFixed(2)} km  ${p.found.name} / ` +
+                `${p.found.dimotiki_enotita}  <-  ${p.Name_GR} (${p.lat}, ${p.lon})`));
     }
-    if (none.length) {
+    if (unplaced.length) {
         console.log("\nNo municipality within 3 km (wrong or missing coordinates?):");
-        none.forEach((p) => console.log(`  #${p.id}  ${p.Name_GR} (${p.lat}, ${p.lon})`));
+        unplaced.forEach((p) => console.log(`  #${p.id}  ${p.Name_GR} (${p.lat}, ${p.lon})`));
     }
 } catch (error) {
     console.error("Failed:", error.message);
