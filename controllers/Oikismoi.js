@@ -51,3 +51,18 @@ export const getOikismoiOfDimos = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 };
+
+// GET /oikismoi/names -> every settlement of Greece, compact, for the map's search box:
+// [{ id, name, koinotita, dimos_code, de_code }] (no coordinates; ~13.500 rows, fetched once)
+export const getOikismoiNames = async (req, res) => {
+    try {
+        const rows = await Oikismoi.findAll({
+            attributes: ["id", "name", "koinotita", "dimos_code", "de_code"],
+            order: [["name", "ASC"], ["id", "ASC"]],
+            raw: true,
+        });
+        res.status(200).json(rows);
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
