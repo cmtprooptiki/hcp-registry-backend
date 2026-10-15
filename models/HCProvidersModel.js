@@ -104,6 +104,41 @@ const HCProviders = db.define('HCProviders', {
     {
         type: DataTypes.STRING(200),
         allowNull:true
+    },
+    // Municipality (Δήμος), filled automatically from lat/lon (see utils/dimoiLookup.js)
+    dimos:
+    {
+        type: DataTypes.STRING(150),
+        allowNull: true
+    },
+    dimos_code:
+    {
+        type: DataTypes.STRING(4),
+        allowNull: true
+    },
+    // Settlement (Οικισμός): the nearest settlement of the municipality, filled automatically
+    // (see utils/oikismoiLookup.js); oikismos_id -> Oikismoi.id
+    oikismos:
+    {
+        type: DataTypes.STRING(200),
+        allowNull: true
+    },
+    oikismos_id:
+    {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    // Περιφερειακά Ιατρεία / ΠΠΙ imported from "Χάρτης δομών ΠΦΥ" (see utils/setupIatreia.js):
+    // their id there (e.g. "S0086") and how exact their position is
+    source_id:
+    {
+        type: DataTypes.STRING(20),
+        allowNull: true
+    },
+    location_accuracy:
+    {
+        type: DataTypes.STRING(100),
+        allowNull: true
     }
 
 },{

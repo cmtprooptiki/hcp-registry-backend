@@ -11,12 +11,23 @@ import UserRoute from "./routes/userRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import HCProvidersRoute from "./routes/HCProvidersRoute.js";
 import hcpInfoRoute from "./routes/hcpInfoRoute.js";
+import DimoiRoute from "./routes/DimoiRoute.js";
+import PerifereiesRoute from "./routes/PerifereiesRoute.js";
+import PerifereiakesEnotitesRoute from "./routes/PerifereiakesEnotitesRoute.js";
+import OikismoiRoute from "./routes/OikismoiRoute.js";
+import { setupDimoi } from "./utils/setupDimoi.js";
+import { setupIatreia } from "./utils/setupIatreia.js";
+import { prepareOikismoiTables, setupOikismoi } from "./utils/setupOikismoi.js";
 
 // Models (imported so they are registered before db.sync())
 import "./models/UserModel.js";
 import "./models/HCProvidersModel.js";
 import "./models/hcpusersModel.js";
 import "./models/hcpInfoModel.js";
+import "./models/PerifereiesModel.js";
+import "./models/PerifereiakesEnotitesModel.js";
+import "./models/DimoiModel.js";
+import "./models/OikismoiModel.js";
 
 dotenv.config();
 
@@ -26,7 +37,7 @@ const server = http.createServer(app);
 // CORS Configuration
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
-  : ["https://app.healthiq-registry.gr"];
+  : ["http://localhost:3000"];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -67,6 +78,10 @@ app.use(UserRoute);
 app.use(AuthRoute);
 app.use(HCProvidersRoute);
 app.use(hcpInfoRoute);
+app.use(DimoiRoute);
+app.use(PerifereiesRoute);
+app.use(PerifereiakesEnotitesRoute);
+app.use(OikismoiRoute);
 
 // Socket.IO setup
 const io = new Server(server, {
@@ -111,6 +126,10 @@ const PORT = process.env.PORT || process.env.APP_PORT || 5000;
     await db.authenticate();
     await db.sync();
     console.log("MySQL connected and models synced");
+    await setupDimoi();
+    await prepareOikismoiTables(); // settlements table + HCProviders settlement columns
+    await setupIatreia();
+    await setupOikismoi();         // settlement of providers without one
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}...`);

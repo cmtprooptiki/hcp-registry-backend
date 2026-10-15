@@ -1,5 +1,9 @@
 import HCProviders from "../models/HCProvidersModel.js";
 import hcpusers from "../models/hcpusersModel.js";
+import { placeFields } from "../utils/oikismoiLookup.js";
+
+// The municipality and the settlement are always derived from the coordinates, never sent by the client
+const withoutDimos = ({ dimos, dimos_code, oikismos, oikismos_id, ...data }) => data;
 
 // Get all HCProviders
 export const getHCProviders = async (req, res) => {
@@ -51,7 +55,8 @@ export const getHCProvidersByUserId = async (req, res) => {
 // Create a new HCProvider
 export const createHCProviders = async (req, res) => {
     try {
-        await HCProviders.create(req.body);
+        const data = withoutDimos(req.body);
+        await HCProviders.create({ ...data, ...(await placeFields(data.lat, data.lon)) });
         res.status(201).json({ msg: "HCProvider created successfully" });
     } catch (error) {
         res.status(400).json({ msg: error.message });
@@ -64,8 +69,9 @@ export const createHCProvidersJson = async (req, res) => {
         // req.file is available because of multer
         const HCProvidersData = JSON.parse(req.file.buffer.toString());
 
-        for (const data of HCProvidersData) {
-            await HCProviders.create(data);
+        for (const record of HCProvidersData) {
+            const data = withoutDimos(record);
+            await HCProviders.create({ ...data, ...(await placeFields(data.lat, data.lon)) });
         }
 
         res.status(201).json({ msg: "HCProviders created successfully" });
@@ -84,10 +90,25 @@ export const updateHCProviders = async (req, res) => {
     if (!HCProvider) return res.status(404).json({ msg: "HCProvider not found" });
 
     try {
-        await HCProviders.update(req.body, {
+        let data = withoutDimos(req.body);
+
+        // New coordinates -> find the municipality and the settlement again. The position is now
+        // the user's: an imported clinic's location_accuracy no longer applies.
+        if ("lat" in data || "lon" in data) {
+            const lat = "lat" in data ? data.lat : HCProvider.lat;
+            const lon = "lon" in data ? data.lon : HCProvider.lon;
+            data = { ...data, ...(await placeFields(lat, lon)) };
+            if (HCProvider.location_accuracy) data.location_accuracy = null;
+        }
+
+        await HCProviders.update(data, {
             where: { id: req.params.id }
         });
-        res.status(200).json({ msg: "HCProvider updated successfully" });
+        res.status(200).json({
+            msg: "HCProvider updated successfully",
+            dimos: data.dimos, dimos_code: data.dimos_code,
+            oikismos: data.oikismos, oikismos_id: data.oikismos_id,
+        });
     } catch (error) {
         res.status(400).json({ msg: error.message });
     }
