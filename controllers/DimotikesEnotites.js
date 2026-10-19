@@ -2,8 +2,9 @@ import { Sequelize } from "sequelize";
 import DimotikesEnotites from "../models/DimotikesEnotitesModel.js";
 import Dimoi from "../models/DimoiModel.js";
 import Oikismoi from "../models/OikismoiModel.js";
+import Koinotites from "../models/KoinotitesModel.js";
 
-const ATTRIBUTES = ["code", "name", "label", "official_name", "dimos_code", "area_km2"];
+const ATTRIBUTES = ["code", "name", "label", "official_name", "dimos_code", "area_km2", "population", "code_2011"];
 
 const codesFrom = (value, max) => String(value || "")
     .split(",")
@@ -11,24 +12,31 @@ const codesFrom = (value, max) => String(value || "")
     .filter(Boolean)
     .slice(0, max);
 
-const settlementCounts = async (where) => {
-    const rows = await Oikismoi.findAll({
-        attributes: ["de_code", [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]],
+// { de_code: number of rows } of a table (settlements, communities)
+const countsByUnit = async (model, key, where) => {
+    const rows = await model.findAll({
+        attributes: ["de_code", [Sequelize.fn("COUNT", Sequelize.col(key)), "count"]],
         where,
         group: ["de_code"],
         raw: true,
     });
     return Object.fromEntries(rows.map((r) => [r.de_code, Number(r.count)]));
 };
+const settlementCounts = async (where) => ({
+    oikismoi: await countsByUnit(Oikismoi, "id", where),
+    koinotites: await countsByUnit(Koinotites, "code", where),
+});
 
 const asListItem = (counts) => (row) => ({
     ...row,
     area_km2: row.area_km2 === null ? null : Number(row.area_km2),
-    oikismoi_count: counts[row.code] || 0,
+    oikismoi_count: counts.oikismoi[row.code] || 0,
+    koinotites_count: counts.koinotites[row.code] || 0,
 });
 
 // GET /dimotikes-enotites[?dimos_code=7301,7302] -> municipal units (of those municipalities, or
-// all 1035): code, name, label, official_name, dimos_code, area_km2, oikismoi_count; no boundaries
+// all 1037): code, name, label, official_name, dimos_code, area_km2, population (2021), code_2011,
+// oikismoi_count, koinotites_count; no boundaries
 export const getDimotikesEnotites = async (req, res) => {
     try {
         const codes = codesFrom(req.query.dimos_code, 400);

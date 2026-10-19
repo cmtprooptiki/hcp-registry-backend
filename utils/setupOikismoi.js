@@ -1,22 +1,25 @@
 // At startup (see index.js), after the municipal units and before setupIatreia():
 //   1. fills the Oikismoi (settlements) table from data/oikismoi.json, when it is incomplete or the
 //      file changed (versions in the DataVersions table); settlements no longer in the file are removed
-//   2. adds the Oikismoi column de_code and the HCProviders columns oikismos / oikismos_id to
-//      existing databases (db.sync() creates new tables but never adds columns to existing ones)
+//   2. adds the Oikismoi columns de_code / koinotita_code and the HCProviders columns oikismos /
+//      oikismos_id to existing databases (db.sync() creates new tables but never adds columns to existing ones)
 // The settlement of each provider is set by utils/setupPlaces.js.
 //
 // data/oikismoi.json comes from the user's file Oikismoi-Greece.geojson (ΕΛΣΤΑΤ, 13,548
 // settlements). Positions are converted from the file's EPSG:2100 points with the ΕΓΣΑ87 datum
-// shift; municipal unit and municipality come from the ΕΛΣΤΑΤ code of each settlement (see README).
+// shift; municipal unit, municipality, community and population (μόνιμος, 2021) come from the 2021
+// census file MON_PLI_DHM_OIKISN_2021.xlsx (see README). The communities (Koinotites) are seeded before.
 import { DataTypes, Op } from "sequelize";
 import db from "../config/Database.js";
 import Oikismoi from "../models/OikismoiModel.js";
 import DimotikesEnotites from "../models/DimotikesEnotitesModel.js";
+import Koinotites from "../models/KoinotitesModel.js";
 import HCProviders from "../models/HCProvidersModel.js";
 import { clearOikismoiCache } from "./oikismoiLookup.js";
 import { readDataFile, storedVersion, saveVersion } from "./dataVersions.js";
 
-const FIELDS = ["code", "name", "official_name", "koinotita", "lat", "lon", "dimos_code", "de_code"];
+const FIELDS = ["code", "name", "official_name", "koinotita", "koinotita_code", "lat", "lon", "dimos_code",
+    "de_code", "population", "census_code"];
 
 const seedOikismoi = async () => {
     const { records, version } = readDataFile("oikismoi.json");
@@ -34,11 +37,13 @@ const seedOikismoi = async () => {
     return true;
 };
 
-// Oikismoi.de_code, for databases where the table was created before it existed
+// Oikismoi.de_code / koinotita_code / population / census_code, for databases where the table was created before they existed
 const ensureOikismoiColumns = async () => {
     const qi = db.getQueryInterface();
     const table = Oikismoi.getTableName();
     const columns = await qi.describeTable(table);
+    if (!columns.population) await qi.addColumn(table, "population", { type: DataTypes.INTEGER, allowNull: true });
+    if (!columns.census_code) await qi.addColumn(table, "census_code", { type: DataTypes.STRING(10), allowNull: true });
     if (!columns.de_code) {
         await qi.addColumn(table, "de_code", {
             type: DataTypes.STRING(6),
@@ -48,9 +53,20 @@ const ensureOikismoiColumns = async () => {
             onDelete: "SET NULL",
         });
     }
+    if (!columns.koinotita_code) {
+        await qi.addColumn(table, "koinotita_code", {
+            type: DataTypes.STRING(8),
+            allowNull: true,
+            references: { model: Koinotites.getTableName(), key: "code" },
+            onUpdate: "CASCADE",
+            onDelete: "SET NULL",
+        });
+    }
     const indexes = await qi.showIndex(table);
-    if (!indexes.some((index) => index.fields.some((field) => field.attribute === "de_code"))) {
-        await qi.addIndex(table, ["de_code"]);
+    for (const column of ["de_code", "koinotita_code"]) {
+        if (!indexes.some((index) => index.fields.some((field) => field.attribute === column))) {
+            await qi.addIndex(table, [column]);
+        }
     }
 };
 

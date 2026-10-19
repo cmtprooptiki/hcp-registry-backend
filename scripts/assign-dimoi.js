@@ -1,5 +1,5 @@
-// Recomputes the municipality (Δήμος), municipal unit (Δημοτική Ενότητα) and settlement (Οικισμός)
-// of EVERY provider from its lat/lon and prints the providers worth checking by hand. The backend
+// Recomputes the municipality (Δήμος), municipal unit (Δημοτική Ενότητα), settlement (Οικισμός) and
+// community (Κοινότητα) of EVERY provider from its lat/lon and prints the providers worth checking by hand. The backend
 // already does this automatically for new/edited providers and, at startup, for providers missing
 // one of them (and for all, when the boundaries or settlements change); run this only to redo all
 // of them (e.g. after fixing coordinates directly in the DB).
@@ -13,6 +13,7 @@ import "../models/DataVersionsModel.js";
 import HCProviders from "../models/HCProvidersModel.js";
 import { prepareDimoiTables } from "../utils/setupDimoi.js";
 import { prepareDimotikesEnotites } from "../utils/setupDimotikesEnotites.js";
+import { prepareKoinotites } from "../utils/setupKoinotites.js";
 import { prepareOikismoiTables } from "../utils/setupOikismoi.js";
 import { assignPlaces } from "../utils/setupPlaces.js";
 import { findDimos } from "../utils/dimoiLookup.js";
@@ -23,6 +24,7 @@ try {
     await db.authenticate();
     await prepareDimoiTables();
     await prepareDimotikesEnotites();
+    await prepareKoinotites();
     await prepareOikismoiTables();
 
     const { checked, changes, unplaced } = await assignPlaces({ all: true, dryRun });

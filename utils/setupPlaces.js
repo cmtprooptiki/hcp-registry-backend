@@ -1,5 +1,5 @@
-// Runs last at startup (see index.js): municipality (Δήμος), municipal unit (Δημοτική Ενότητα) and
-// settlement (Οικισμός) of the providers, from their lat/lon.
+// Runs last at startup (see index.js): municipality (Δήμος), municipal unit (Δημοτική Ενότητα),
+// settlement (Οικισμός) and community (Κοινότητα, the one of the settlement) of the providers, from their lat/lon.
 //  - when boundaries, settlements or clinic positions changed at this start: every provider
 //  - otherwise: only providers that miss one of them
 // They are computed fields (the client can't set them), so they are written with silent: true
@@ -8,9 +8,10 @@ import { Op } from "sequelize";
 import db from "../config/Database.js";
 import HCProviders from "../models/HCProvidersModel.js";
 import { dimosFields } from "./dimoiLookup.js";
-import { oikismosFields, SEAT_ACCURACY } from "./oikismoiLookup.js";
+import { oikismosFields, NO_SETTLEMENT, SEAT_ACCURACY } from "./oikismoiLookup.js";
 
-const PLACE_FIELDS = ["dimos", "dimos_code", "dimotiki_enotita", "de_code", "oikismos", "oikismos_id"];
+const PLACE_FIELDS = ["dimos", "dimos_code", "dimotiki_enotita", "de_code", "oikismos", "oikismos_id",
+    "koinotita", "koinotita_code"];
 
 // Returns { checked, changed, unplaced: providers outside every municipal unit (> 3 km) }
 export const assignPlaces = async ({ all = false, dryRun = false } = {}) => {
@@ -22,6 +23,7 @@ export const assignPlaces = async ({ all = false, dryRun = false } = {}) => {
                 oikismos_id: null,
                 [Op.or]: [{ location_accuracy: null }, { location_accuracy: { [Op.ne]: SEAT_ACCURACY } }],
             },
+            { oikismos_id: { [Op.ne]: null }, koinotita_code: null },
         ],
     };
     const providers = await HCProviders.findAll({
@@ -38,7 +40,7 @@ export const assignPlaces = async ({ all = false, dryRun = false } = {}) => {
         if (!area.dimos_code) unplaced.push(p);
         // clinics placed at the seat of their municipality: their village, so their settlement, is unknown
         const settlement = p.location_accuracy === SEAT_ACCURACY || !area.dimos_code
-            ? { oikismos: null, oikismos_id: null }
+            ? NO_SETTLEMENT
             : await oikismosFields(p.lat, p.lon, area.dimos_code, area.de_code);
         const fields = { ...area, ...settlement };
         if (PLACE_FIELDS.some((key) => (fields[key] ?? null) !== (p[key] ?? null))) changes.push({ p, fields });
@@ -58,7 +60,7 @@ export const setupPlaces = async ({ recompute = false } = {}) => {
     const { checked, changed, unplaced } = await assignPlaces({ all: recompute });
     if (checked) {
         console.log(
-            `Places (municipality / municipal unit / settlement) ${recompute ? "recomputed" : "checked"} ` +
+            `Places (municipality / municipal unit / settlement / community) ${recompute ? "recomputed" : "checked"} ` +
             `for ${checked} providers, ${changed} changed`
         );
     }

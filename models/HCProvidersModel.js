@@ -140,6 +140,19 @@ const HCProviders = db.define('HCProviders', {
         type: DataTypes.INTEGER,
         allowNull: true
     },
+    // Community (Δημοτική Κοινότητα): the community of its settlement, filled automatically
+    // (see utils/oikismoiLookup.js); koinotita = its label ("Δ.Κ. Σπηλίου"; null in units without
+    // communities, e.g. Αθηναίων), koinotita_code -> Koinotites.code
+    koinotita:
+    {
+        type: DataTypes.STRING(250),
+        allowNull: true
+    },
+    koinotita_code:
+    {
+        type: DataTypes.STRING(8),
+        allowNull: true
+    },
     // Περιφερειακά Ιατρεία / ΠΠΙ imported from "Χάρτης δομών ΠΦΥ" (see utils/setupIatreia.js):
     // their id there (e.g. "S0086") and how exact their position is
     source_id:

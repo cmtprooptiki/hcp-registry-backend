@@ -4,12 +4,12 @@ import Dimoi from "./DimoiModel.js";
 
 const { DataTypes } = Sequelize;
 
-// Municipal units (Δημοτικές Ενότητες, 1035, ΕΛΣΤΑΤ / Kallikratis) with their boundaries.
+// Municipal units (Δημοτικές Ενότητες, 1037: the division of the 2021 census) with their boundaries.
 // A municipality (Δήμος) has one or more municipal units, a municipal unit one or more
 // settlements (Οικισμοί). Filled automatically at startup from data/dimotikes_enotites.json
 // (see utils/setupDimotikesEnotites.js).
 const DimotikesEnotites = db.define('DimotikesEnotites', {
-    // ΕΛΣΤΑΤ (Kallikratis) code, 6 digits; the settlement codes start with it
+    // ΕΛΣΤΑΤ code of the 2021 census, 6 digits (municipality code + 2)
     code: {
         type: DataTypes.STRING(6),
         primaryKey: true
@@ -36,6 +36,17 @@ const DimotikesEnotites = db.define('DimotikesEnotites', {
     },
     area_km2: {
         type: DataTypes.DECIMAL(10, 2),
+        allowNull: true
+    },
+    // Μόνιμος πληθυσμός, 2021 census
+    population: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    // ΕΛΣΤΑΤ 2011 (Kallikratis) code of the same unit; null for the two units created since
+    // (Δηλεσίου, whose boundary is approximate, and Ανάληψης)
+    code_2011: {
+        type: DataTypes.STRING(6),
         allowNull: true
     },
     // GeoJSON (Multi)Polygon as text: simplified (~250 m) for the map...

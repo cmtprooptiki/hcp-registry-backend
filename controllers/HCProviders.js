@@ -2,8 +2,8 @@ import HCProviders from "../models/HCProvidersModel.js";
 import hcpusers from "../models/hcpusersModel.js";
 import { placeFields } from "../utils/oikismoiLookup.js";
 
-// Municipality, municipal unit and settlement are always derived from the coordinates, never sent by the client
-const withoutDimos = ({ dimos, dimos_code, dimotiki_enotita, de_code, oikismos, oikismos_id, ...data }) => data;
+// Municipality, municipal unit, settlement and community are always derived from the coordinates, never sent by the client
+const withoutDimos = ({ dimos, dimos_code, dimotiki_enotita, de_code, oikismos, oikismos_id, koinotita, koinotita_code, ...data }) => data;
 
 // Get all HCProviders
 export const getHCProviders = async (req, res) => {
@@ -92,7 +92,7 @@ export const updateHCProviders = async (req, res) => {
     try {
         let data = withoutDimos(req.body);
 
-        // New coordinates -> find the municipality, municipal unit and settlement again. The position is now
+        // New coordinates -> find the municipality, municipal unit, settlement and community again. The position is now
         // the user's: an imported clinic's location_accuracy no longer applies.
         if ("lat" in data || "lon" in data) {
             const lat = "lat" in data ? data.lat : HCProvider.lat;
@@ -109,6 +109,7 @@ export const updateHCProviders = async (req, res) => {
             dimos: data.dimos, dimos_code: data.dimos_code,
             dimotiki_enotita: data.dimotiki_enotita, de_code: data.de_code,
             oikismos: data.oikismos, oikismos_id: data.oikismos_id,
+            koinotita: data.koinotita, koinotita_code: data.koinotita_code,
         });
     } catch (error) {
         res.status(400).json({ msg: error.message });
