@@ -1,13 +1,12 @@
 # Deployment: Portainer + Nginx Proxy Manager
 
-One stack with four containers:
+One stack with three containers (the database is managed with the existing phpMyAdmin stack):
 
 | Service | Image | Port on the server | What |
 |---|---|---|---|
-| `db` | mysql:8.0 | — (stack network only) | database, data in volume `db_data` |
+| `db` | mysql:8.0 | — (network `healthmap_net` only, name `healthmap-db`) | database, data in volume `db_data` |
 | `backend` | built from this repo | `BACKEND_PORT` (5010) → 5000 | API; uploaded images in volume `uploads` |
 | `frontend` | built from `hcp-frontend-map` | `FRONTEND_PORT` (3010) → 80 | React build served by nginx |
-| `phpmyadmin` | phpmyadmin:5 | `PMA_PORT` (8090) | first import of the database; stop it afterwards |
 
 The two app images are built by Portainer straight from GitHub (`build.context` = repo URL with a
 read-only token), so nothing has to be copied to the server.
@@ -30,13 +29,32 @@ Under **Environment variables** → Advanced mode → paste `deploy/stack.env.ex
 real values (`APP_URL` / `API_URL` = the two https addresses). **Deploy the stack.**
 The first build takes several minutes (the React build needs ~2–4 GB RAM).
 
-## 4. Database
+## 4. Database (with the existing phpMyAdmin stack)
+
+The HealthMap stack must be deployed first (it creates the network `healthmap_net`).
+In the phpMyAdmin stack's compose, join that network and list both servers:
+
+```yaml
+services:
+  phpmyadmin:
+    # ...as it is...
+    environment:
+      PMA_HOSTS: <its current database host>,healthmap-db   # replaces PMA_HOST; a server menu on the login page
+      UPLOAD_LIMIT: 512M
+    networks: [default, healthmap_net]
+
+networks:
+  healthmap_net:
+    external: true
+```
+
+Update that stack, then:
 
 1. Local phpMyAdmin → database `hcp_registry` → Export → Quick, SQL.
-2. `http://<server>:8090` → server `db`, user `root` / `MYSQL_ROOT_PASSWORD` → database
+2. Server phpMyAdmin → server `healthmap-db`, user `root` / `MYSQL_ROOT_PASSWORD` → database
    `hcp_registry` → Import → the .sql file.
 3. Portainer → Containers → `backend` → Restart. Its log should end with `Server running on port 5000...`.
-4. Stop `phpmyadmin` (Containers → Stop). Delete the .sql file from your computer (it holds password hashes).
+4. Delete the .sql file from your computer (it holds password hashes).
 
 The database user of the app (`DB_USER`) gets rights on `DB_NAME` automatically (MySQL image).
 

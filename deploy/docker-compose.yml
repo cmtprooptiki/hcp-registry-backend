@@ -1,9 +1,12 @@
-# HealthMap stack for Portainer: MySQL + API + web app (+ phpMyAdmin for the first import).
+# HealthMap stack for Portainer: MySQL + API + web app.
 # Portainer: Stacks -> Add stack -> Web editor (paste this file), set the variables of
 # deploy/stack.env.example under "Environment variables", Deploy. Details: deploy/README.md
 #
 # The two app images are built from the private GitHub repos with a read-only token (GITHUB_TOKEN).
 # pull_policy: build = every "Update the stack" rebuilds them from the branch, so a redeploy takes the latest code.
+#
+# The database is managed with the company's existing phpMyAdmin stack: it joins the network
+# "healthmap_net" (external there) and reaches this database as "healthmap-db" (see deploy/README.md).
 
 services:
   db:
@@ -18,13 +21,16 @@ services:
       TZ: Europe/Athens
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      default:
+        aliases: [healthmap-db]   # stable name for the shared phpMyAdmin
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
       interval: 10s
       timeout: 5s
       retries: 12
       start_period: 30s
-    # no published port: only the API (and phpMyAdmin) reach it, on the stack's network
+    # no published port: only the API and the shared phpMyAdmin reach it, on healthmap_net
 
   backend:
     image: healthmap-backend:latest
@@ -67,21 +73,10 @@ services:
     ports:
       - "${FRONTEND_PORT:-3010}:80"
 
-  # For the first import of the database (and occasional checks). Stop it in Portainer when not needed.
-  phpmyadmin:
-    image: phpmyadmin:5
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      PMA_HOST: db
-      UPLOAD_LIMIT: 512M
-      MEMORY_LIMIT: 1024M
-      MAX_EXECUTION_TIME: 1200
-    ports:
-      - "${PMA_PORT:-8090}:80"
-
 volumes:
   db_data:
   uploads:
+
+networks:
+  default:
+    name: healthmap_net   # fixed name, so the phpMyAdmin stack can join it
