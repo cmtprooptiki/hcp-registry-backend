@@ -80,3 +80,7 @@ volumes:
 networks:
   default:
     name: healthmap_net   # fixed name, so the phpMyAdmin stack can join it
+    # fixed subnet, next to the other stacks (192.168.200-220.0/24 are taken); change it if it is used
+    ipam:
+      config:
+        - subnet: 192.168.230.0/24

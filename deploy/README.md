@@ -31,7 +31,7 @@ The first build takes several minutes (the React build needs ~2–4 GB RAM).
 
 ## 4. Database (with the existing phpMyAdmin stack)
 
-The HealthMap stack must be deployed first (it creates the network `healthmap_net`).
+The HealthMap stack must be deployed first (it creates the network `healthmap_net`, subnet 192.168.230.0/24; check in Portainer → Networks that no other network uses it).
 In the phpMyAdmin stack's compose, join that network and list both servers:
 
 ```yaml
