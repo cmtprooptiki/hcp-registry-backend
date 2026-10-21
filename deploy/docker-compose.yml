@@ -1,0 +1,87 @@
+# HealthMap stack for Portainer: MySQL + API + web app (+ phpMyAdmin for the first import).
+# Portainer: Stacks -> Add stack -> Web editor (paste this file), set the variables of
+# deploy/stack.env.example under "Environment variables", Deploy. Details: deploy/README.md
+#
+# The two app images are built from the private GitHub repos with a read-only token (GITHUB_TOKEN).
+# pull_policy: build = every "Update the stack" rebuilds them from the branch, so a redeploy takes the latest code.
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--max_allowed_packet=256M"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-hcp_registry}
+      MYSQL_USER: ${DB_USER:-hcp}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD}
+      TZ: Europe/Athens
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    # no published port: only the API (and phpMyAdmin) reach it, on the stack's network
+
+  backend:
+    image: healthmap-backend:latest
+    build:
+      context: https://${GITHUB_TOKEN:?set GITHUB_TOKEN}@github.com/cmtprooptiki/hcp-registry-backend.git#${GIT_BRANCH:-main}
+    pull_policy: build
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      APP_PORT: 5000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-hcp_registry}
+      DB_USER: ${DB_USER:-hcp}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSL: "false"
+      SESS_SECRET: ${SESS_SECRET:?set SESS_SECRET}
+      API_KEY: ${API_KEY:-}
+      ALLOWED_ORIGINS: ${APP_URL:?set APP_URL}
+      TZ: Europe/Athens
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "${BACKEND_PORT:-5010}:5000"
+
+  frontend:
+    image: healthmap-frontend:latest
+    build:
+      context: https://${GITHUB_TOKEN}@github.com/cmtprooptiki/hcp-frontend-map.git#${GIT_BRANCH:-main}
+      args:
+        REACT_APP_API_URL: ${API_URL:?set API_URL}
+        REACT_APP_FRONT_URL: ${APP_URL}
+    pull_policy: build
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-3010}:80"
+
+  # For the first import of the database (and occasional checks). Stop it in Portainer when not needed.
+  phpmyadmin:
+    image: phpmyadmin:5
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PMA_HOST: db
+      UPLOAD_LIMIT: 512M
+      MEMORY_LIMIT: 1024M
+      MAX_EXECUTION_TIME: 1200
+    ports:
+      - "${PMA_PORT:-8090}:80"
+
+volumes:
+  db_data:
+  uploads:

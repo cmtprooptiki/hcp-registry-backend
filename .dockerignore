@@ -1,0 +1,11 @@
+.git
+node_modules
+.env
+.env.*
+!.env.example
+reports
+deploy
+*.rest
+one-click-push.sh
+**/__pycache__
+.DS_Store
