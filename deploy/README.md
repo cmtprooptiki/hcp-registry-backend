@@ -58,6 +58,9 @@ Update that stack, then:
 
 The database user of the app (`DB_USER`) gets rights on `DB_NAME` automatically (MySQL image).
 
+The database runs with `lower_case_table_names=1` (table names without case, like MySQL on macOS),
+so a dump made on a Mac imports as it is. This is fixed when the `db_data` volume is created.
+
 ## 5. Nginx Proxy Manager
 
 Two Proxy Hosts, both with **SSL → Request a new certificate, Force SSL, HTTP/2**:
