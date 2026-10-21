@@ -5,3 +5,7 @@
 
 ### local settings and secrets
 .env
+
+### road graph of the remote-areas computation (~300 MB, see scripts/access/README.md)
+/reports/access/
+__pycache__/

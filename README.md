@@ -110,3 +110,19 @@ The 568 original providers have geocoded coordinates, and some were far from the
 - Every move is logged in the table `ProviderCoordinateFixes` (old and new position, where it was, distance).
 - `node scripts/provider-coords.js` shows the result on the current database (moved / would be moved / to review / names not in the file); `--report` also writes `reports/provider_coordinates.csv` (every provider, opens in Excel); `--revert` puts the moved providers back (the startup then does not move them again).
 - A first version of this step (2026-10-16 morning, `data/provider_coords_fix.json`) matched providers by `Q4ALL_code` and old position, and moved only those whose position was exactly the one of `hcproviders.json`; its moves are logged in the table too (`was_at` = "first version").
+
+## Edits of the original providers (renames, missing units, removals)
+
+`data/provider_edits.json` lists renames (`from` → `to`, matched by `Name_GR` without accents, case and punctuation, optionally a new `Name_EN`), providers to add and fields to set on existing providers (`update`, by `Name_GR`, or by `source_id` for a regional clinic of `data/iatreia.json`, which is imported only once; new `lat`/`lon` clear the place fields so `setupPlaces()` recomputes them) and providers to remove (`remove`, by `Name_GR`; a provider still linked to a user account in `hcpusers` is skipped and reported, its `ProviderCoordinateFixes` rows go with it). The hospitals follow the official list of the 127 ΕΣΥ hospitals (October 2026). At startup `utils/setupProviderEdits.js` applies it once per version of the file (`DataVersions`), before the coordinate check; it is idempotent (a provider that already has the new name, an addition whose name exists, or a removal already done, is skipped). Added providers get their municipality, unit, settlement and community from `setupPlaces()`. `data/provider_places.json` follows the same names.
+
+First version (2026-10-19, from the 2nd and 4th ΥΠΕ lists "Μονάδες Υγείας ΕΣΥ ανά Κατηγορία"; Health Centres 308 → 310):
+- added 18η ΤΟΜΥ ΔΗΜΟΥ ΚΟΡΔΕΛΙΟΥ-ΕΥΟΣΜΟΥ (3rd ΥΠΕ) and, from the 6th ΥΠΕ list of TOMY, 2η ΤΟΜΥ ΔΗΜΟΥ ΑΡΤΑΣ, 3η ΤΟΜΥ ΔΗΜΟΥ ΚΑΛΑΜΑΤΑΣ, 3η ΤΟΜΥ ΔΗΜΟΥ ΚΟΡΙΝΘΟΥ (TOMY 133 → 137);
+- added Κ.Υ. ΣΥΜΗΣ (2nd ΥΠΕ, founded 31.10.2022, took over the former Π.Π.Ι. ΣΥΜΗΣ; at the ΕΛΣΤΑΤ point of Σύμη);
+- "Κ.Υ. ΜΟΥΔΑΝΙΩΝ 1o και 2ο" split: renamed Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 1ο, added Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 2ο (same building and address); both moved to the exact position of the building (40.240152, 23.292482) with `update`;
+- 1η ΤΟΜΥ ΔΗΜΟΥ ΙΩΑΝΝΙΝΩΝ: address ΦΙΛΙΚΗΣ ΕΤΑΙΡΕΙΑΣ 15, ΙΩΑΝΝΙΝΑ 45444 (was ΖΙΤΣΑ 45500); its rule in `provider_places.json` now points to Ιωάννινα, not Ζίτσα;
+- 9 Πολυδύναμα Π.Ι. (`update` by `source_id`, also in `data/iatreia.json` for new databases): ΠΠΙ Θιναλίων moved from Πλάτωνας to Αχαράβη (5 km), ΠΠΙ Γερολιμένα Μάνης to Γερολιμήν, ΠΠΙ Μακρύ Γιαλού from Ανάληψις (Δ. Σητείας) to Μακρυγιαλός (Δ. Ιεράπετρας), all at the ΕΛΣΤΑΤ point of the settlement; Αγαθονησίου, Αιγιάλης, Κάσου, Κέας, Ραχών Ικαρίας, Σίφνου were already at their settlement: `location_accuracy` "Settlement" (was municipality seat / approximate);
+- renamed: ΣΑΠΩΝ → ΣΑΠΠΩΝ, ΣΤΡΥΜΩΝΙΚΟΥ → ΣΤΡΥΜΟΝΙΚΟΥ, ΜΑΔΥΤΟΥ → Ν. ΜΑΔΥΤΟΥ, ΜΗΧΑΝΙΩΝΑΣ → Ν. ΜΗΧΑΝΙΩΝΑΣ, ΑΜΟΡΓΟΥ → ΧΩΡΑΣ ΑΜΟΡΓΟΥ, "K.Y. IOY" (Latin letters) → Κ.Υ. ΙΟΥ.
+
+## Remote areas (road distance to the nearest health structure)
+
+`data/settlement_access.json` holds the road distance of every settlement to the nearest Hospital / Health Centre / TOMY / Π.Π.Ι. (and to the nearest Π.Ι.), roads only. `utils/setupSettlementAccess.js` loads it into `SettlementAccess` at startup and `GET /access/settlements` serves it to the map's «Απομακρυσμένες περιοχές» view, with `meta.stale` when the providers changed since. How to recompute it (Python, no Docker): `scripts/access/README.md`.

@@ -17,6 +17,7 @@ import PerifereiakesEnotitesRoute from "./routes/PerifereiakesEnotitesRoute.js";
 import OikismoiRoute from "./routes/OikismoiRoute.js";
 import DimotikesEnotitesRoute from "./routes/DimotikesEnotitesRoute.js";
 import KoinotitesRoute from "./routes/KoinotitesRoute.js";
+import AccessRoute from "./routes/AccessRoute.js";
 import { setupDimoi } from "./utils/setupDimoi.js";
 import { prepareDimotikesEnotites } from "./utils/setupDimotikesEnotites.js";
 import { prepareKoinotites } from "./utils/setupKoinotites.js";
@@ -24,6 +25,8 @@ import { setupIatreia } from "./utils/setupIatreia.js";
 import { prepareOikismoiTables } from "./utils/setupOikismoi.js";
 import { setupPlaces } from "./utils/setupPlaces.js";
 import { setupProviderCoords } from "./utils/setupProviderCoords.js";
+import { setupProviderEdits } from "./utils/setupProviderEdits.js";
+import { setupSettlementAccess } from "./utils/setupSettlementAccess.js";
 
 // Models (imported so they are registered before db.sync())
 import "./models/UserModel.js";
@@ -37,6 +40,7 @@ import "./models/DimotikesEnotitesModel.js";
 import "./models/KoinotitesModel.js";
 import "./models/OikismoiModel.js";
 import "./models/DataVersionsModel.js";
+import "./models/SettlementAccessModel.js";
 
 dotenv.config();
 
@@ -93,6 +97,7 @@ app.use(PerifereiakesEnotitesRoute);
 app.use(OikismoiRoute);
 app.use(DimotikesEnotitesRoute);
 app.use(KoinotitesRoute);
+app.use(AccessRoute);
 
 // Socket.IO setup
 const io = new Server(server, {
@@ -143,8 +148,10 @@ const PORT = process.env.PORT || process.env.APP_PORT || 5000;
     const seededCommunities = await prepareKoinotites();   // communities (Κοινότητες)
     const seededSettlements = await prepareOikismoiTables(); // settlements (Οικισμοί)
     const { moved } = await setupIatreia();                // regional clinics (ΠΙ / ΠΠΙ)
+    await setupProviderEdits();                            // renamed / added providers (data/provider_edits.json)
     const corrected = await setupProviderCoords();         // providers far from the place in their name
     await setupPlaces({ recompute: seededAreas || seededUnits || seededCommunities || seededSettlements || moved > 0 || corrected > 0 });
+    await setupSettlementAccess();                         // road distances of the settlements (remote areas)
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}...`);

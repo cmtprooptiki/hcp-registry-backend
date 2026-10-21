@@ -1,0 +1,256 @@
+{
+  "about": "Edits of the original providers (hospitals, Health Centres, TOMY) applied at startup by utils/setupProviderEdits.js, once per version of this file: renames (matched by Name_GR without accents, case and punctuation), providers to add (skipped when a provider with the same name already exists) fields to set on existing providers (update; new lat/lon -> their place is recomputed) and providers to remove (remove; matched by Name_GR, not removed while linked to a user account). Source: lists 'Μονάδες Υγείας ΕΣΥ ανά Κατηγορία' of the 2nd and 4th ΥΠΕ (October 2026). Hospitals: the list 'Νοσοκομεία ΕΣΥ όλες οι ΥΠΕ' (127, October 2026).",
+  "rename": [
+    {
+      "from": "Κ.Υ. ΣΑΠΩΝ",
+      "to": "Κ.Υ. ΣΑΠΠΩΝ"
+    },
+    {
+      "from": "Κ.Υ. ΣΤΡΥΜΩΝΙΚΟΥ",
+      "to": "Κ.Υ. ΣΤΡΥΜΟΝΙΚΟΥ"
+    },
+    {
+      "from": "Κ.Υ. ΜΑΔΥΤΟΥ",
+      "to": "Κ.Υ. Ν. ΜΑΔΥΤΟΥ"
+    },
+    {
+      "from": "Κ.Υ. ΜΗΧΑΝΙΩΝΑΣ",
+      "to": "Κ.Υ. Ν. ΜΗΧΑΝΙΩΝΑΣ"
+    },
+    {
+      "from": "Κ.Υ. ΑΜΟΡΓΟΥ",
+      "to": "Κ.Υ. ΧΩΡΑΣ ΑΜΟΡΓΟΥ"
+    },
+    {
+      "from": "K.Y. IOY",
+      "to": "Κ.Υ. ΙΟΥ",
+      "note": "was written with Latin letters"
+    },
+    {
+      "from": "Κ.Υ. ΜΟΥΔΑΝΙΩΝ 1o και 2ο",
+      "to": "Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 1ο",
+      "Name_EN": "1st Health Center Nea Moudania",
+      "note": "one record for two units: split, the 2nd is added below"
+    }
+  ],
+  "update": [
+    {
+      "source_id": "S1171",
+      "Name_GR": "ΠΠΙ Θιναλίων",
+      "lat": 39.755379,
+      "lon": 19.783803,
+      "location_accuracy": "Settlement",
+      "note": "was at Πλάτωνας, 5 km from Αχαράβη; the clinic is in Αχαράβη (\"Πολυδύναμο Ιατρείο Αχαράβης\", life-news.gr 2026-10-14) — ΕΛΣΤΑΤ point of Αχαράβη"
+    },
+    {
+      "source_id": "S1169",
+      "Name_GR": "ΠΠΙ Γερολιμένα Μάνης",
+      "lat": 36.48146,
+      "lon": 22.400937,
+      "location_accuracy": "Settlement",
+      "note": "was between Βαθιά and Γερολιμένας — ΕΛΣΤΑΤ point of Γερολιμήν"
+    },
+    {
+      "source_id": "S1698",
+      "Name_GR": "ΠΠΙ Μακρύ Γιαλού",
+      "lat": 35.038572,
+      "lon": 25.97284,
+      "location_accuracy": "Settlement",
+      "note": "was at Ανάληψις (Δ.Ε. Ανάληψης, Δήμος Σητείας since 2021) — ΕΛΣΤΑΤ point of Μακρυγιαλός (Δήμος Ιεράπετρας)"
+    },
+    {
+      "source_id": "S0089",
+      "Name_GR": "ΠΠΙ Αγαθονησίου",
+      "location_accuracy": "Settlement",
+      "note": "position already at Μεγάλο Χωριό (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "source_id": "S0090",
+      "Name_GR": "ΠΠΙ Αιγιάλης",
+      "location_accuracy": "Settlement",
+      "note": "position already at Όρμος Αιγιάλης (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "source_id": "S0099",
+      "Name_GR": "ΠΠΙ Κάσου",
+      "location_accuracy": "Settlement",
+      "note": "position already at Φρυ (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "source_id": "S0100",
+      "Name_GR": "ΠΠΙ Κέας",
+      "location_accuracy": "Settlement",
+      "note": "position already at Ιουλίδα (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "source_id": "S0112",
+      "Name_GR": "ΠΠΙ Ραχών Ικαρίας",
+      "location_accuracy": "Settlement",
+      "note": "position already at Χριστός (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "source_id": "S0113",
+      "Name_GR": "ΠΠΙ Σίφνου",
+      "location_accuracy": "Settlement",
+      "note": "position already at Απολλωνία (within 0.3 km), only the accuracy label was wrong"
+    },
+    {
+      "Name_GR": "Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 1ο",
+      "lat": 40.240152282750806,
+      "lon": 23.29248244780575,
+      "location_accuracy": null,
+      "note": "exact position of the building (checked 2026-10-19)"
+    },
+    {
+      "Name_GR": "Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 2ο",
+      "lat": 40.240152282750806,
+      "lon": 23.29248244780575,
+      "location_accuracy": null,
+      "note": "same building as the 1st"
+    },
+    {
+      "Name_GR": "1η ΤΟΜΥ ΔΗΜΟΥ ΙΩΑΝΝΙΝΩΝ",
+      "address": "ΦΙΛΙΚΗΣ ΕΤΑΙΡΕΙΑΣ 15, ΙΩΑΝΝΙΝΑ 45444, Greece",
+      "post_Code": "45444",
+      "note": "was 'ΦΙΛΙΚΗΣ ΕΤΑΙΡΕΙΑΣ 15, ΖΙΤΣΑ 455 00' (wrong town; the unit is in Ioannina, address confirmed by the user 2026-10-19); position unchanged, it was already in Ioannina"
+    }
+  ],
+  "add": [
+    {
+      "ype": 4,
+      "Q4ALL_code": "Y4 P408",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 2ο",
+      "Name_EN": "2nd Health Center Nea Moudania",
+      "lat": 40.240152282750806,
+      "lon": 23.29248244780575,
+      "address": "ΠΑΝΑΓΙΑΣ ΚΟΡΥΦΙΝΗΣ 43, ΜΟΥΔΑΝΙΑ 63200, Greece",
+      "post_Code": "63200",
+      "general_Email_Contact": "ky.moudanion@4ype-pfy.gr",
+      "note": "same building, address and e-mail as Κ.Υ. Ν. ΜΟΥΔΑΝΙΩΝ 1ο (the former single record) until its own are known"
+    },
+    {
+      "ype": 3,
+      "Q4ALL_code": "Y3 P409",
+      "type_Of_Hcp": "TOMY",
+      "Name_GR": "18η ΤΟΜΥ ΔΗΜΟΥ ΚΟΡΔΕΛΙΟΥ-ΕΥΟΣΜΟΥ",
+      "Name_EN": "18th TOMY Kordeliou-Evosmos",
+      "lat": 40.66960474319861,
+      "lon": 22.92284436081414,
+      "address": "ΙΛΙΑΔΟΣ 3, ΕΥΟΣΜΟΣ 56224, Greece",
+      "post_Code": "56224",
+      "note": "missing from the original list; exact position given by the user (2026-10-19); address from 3ype.gr (housed with the 10η ΤΟΜΥ, tel. 2310006357); e-mail not published"
+    },
+    {
+      "ype": 6,
+      "Q4ALL_code": "Y6 P410",
+      "type_Of_Hcp": "TOMY",
+      "Name_GR": "2η ΤΟΜΥ ΔΗΜΟΥ ΑΡΤΑΣ",
+      "Name_EN": "2nd TOMY Artas",
+      "lat": 39.157174,
+      "lon": 20.9811733,
+      "address": "ΖΑΡΡΑ 2, ΑΡΤΑ 47100, Greece",
+      "post_Code": "47100",
+      "note": "missing from the original list (6th ΥΠΕ list, Κ.Υ. αναφοράς Άρτας); address given by the user, same building as the 1η ΤΟΜΥ Άρτας (its position); e-mail not published; 6η ΥΠΕ is tendering a new building for it (dypede.gr, 2026-10-06)"
+    },
+    {
+      "ype": 6,
+      "Q4ALL_code": "Y6 P411",
+      "type_Of_Hcp": "TOMY",
+      "Name_GR": "3η ΤΟΜΥ ΔΗΜΟΥ ΚΑΛΑΜΑΤΑΣ",
+      "Name_EN": "3rd TOMY Kalamatas",
+      "lat": 37.033000483576714,
+      "lon": 22.11218268584753,
+      "address": "ΠΛΑΤΩΝΟΣ & ΚΑΝΑΡΗ, ΚΑΛΑΜΑΤΑ 24100, Greece",
+      "post_Code": "24100",
+      "general_Email_Contact": "tomykalamata3@1545.syzefxis.gov.gr",
+      "note": "missing from the original list; position given by the user; opened 20.4.2023, housed in the Κ.Υ. Καλαμάτας building (messinialive.gr), tel. 2721045542, 2721045588"
+    },
+    {
+      "ype": 6,
+      "Q4ALL_code": "Y6 P412",
+      "type_Of_Hcp": "TOMY",
+      "Name_GR": "3η ΤΟΜΥ ΔΗΜΟΥ ΚΟΡΙΝΘΟΥ",
+      "Name_EN": "3rd TOMY Korinthos",
+      "lat": 37.93728976693023,
+      "lon": 22.93774110020681,
+      "address": "Λ. ΑΘΗΝΩΝ & ΑΡΙΣΤΟΤΕΛΟΥΣ 1, ΚΟΡΙΝΘΟΣ 20131, Greece",
+      "post_Code": "20131",
+      "general_Email_Contact": "tomykorinthos3@1545.syzefxis.gov.gr",
+      "note": "missing from the original list; position given by the user; address and e-mail from the Municipality of Corinth press release (April 2023), tel. 2741025912, 2741027863"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2 P407",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Κ.Υ. ΣΥΜΗΣ",
+      "Name_EN": "Health Center Symis",
+      "lat": 36.614671,
+      "lon": 27.836557,
+      "address": "ΣΥΜΗ 85600, Greece",
+      "post_Code": "85600",
+      "location_accuracy": "Settlement centre",
+      "note": "founded 31.10.2022, it took over the former Π.Π.Ι. ΣΥΜΗΣ; position = the ΕΛΣΤΑΤ point of Σύμη (not the building)"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2_H022",
+      "type_Of_Hcp": "Hospital",
+      "Name_GR": "Γ.Ν. Θήρας",
+      "Name_EN": "General Hospital of Thira (Santorini)",
+      "category_As_Per_HealthAtlas": "0-100 Beds",
+      "lat": 36.407836,
+      "lon": 25.441652,
+      "address": "Καρτεράδος, Θήρα, 84700, Θήρας, Κυκλάδων",
+      "post_Code": "84700",
+      "email_Contact": "info@santorini-hospital.gr",
+      "general_Email_Contact": "info@santorini-hospital.gr",
+      "website": "https://www.santorini-hospital.gr/",
+      "note": "missing from the database (official list of the 127 ΕΣΥ hospitals, October 2026); position = OSM building 'Santorini Hospital' (way 2883137854); address/e-mail from santorini-hospital.gr documents; tel. 2286035300"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2_H023",
+      "type_Of_Hcp": "Hospital",
+      "Name_GR": "Γ.Ν. Καρπάθου «Άγιος Ιωάννης ο Καρπάθιος»",
+      "Name_EN": "General Hospital of Karpathos \"Agios Ioannis o Karpathios\"",
+      "category_As_Per_HealthAtlas": "0-100 Beds",
+      "lat": 35.527589,
+      "lon": 27.194834,
+      "address": "Περιοχή Βροντή, Κάρπαθος, 85700, Καρπάθου, Καρπάθου",
+      "post_Code": "85700",
+      "email_Contact": "kykarpathou@2dype.gr",
+      "general_Email_Contact": "kykarpathou@2dype.gr",
+      "website": "https://karpathos-hospital.gov.gr/",
+      "note": "missing from the database (official list, October 2026); position = OSM hospital 'Γενικό Νοσοκομείο Καρπάθου' at Βροντή (way 2135968336), the address given by ΕΟΠΥΥ; e-mail from ΕΟΠΥΥ; tel. 2245022228"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2_H024",
+      "type_Of_Hcp": "Hospital",
+      "Name_GR": "Ωνάσειο Καρδιοχειρουργικό Κέντρο",
+      "Name_EN": "Onassis Cardiac Surgery Centre",
+      "category_As_Per_HealthAtlas": "201-400 Beds",
+      "lat": 37.942399,
+      "lon": 23.697557,
+      "address": "Λεωφ. Συγγρού 356, Καλλιθέα, 17674, Καλλιθέας, Αττικής",
+      "post_Code": "17674",
+      "website": "https://www.onasseio.gr/",
+      "note": "missing from the database (official list: ΩΝΑΣΕΙΟ ΝΟΣΟΚΟΜΕΙΟ, 2η ΥΠΕ, October 2026); position = OSM hospital 'Ωνάσειο Νοσοκομείο' (way 46360706); address from its announcements (hcs.gr); bed category to be confirmed; tel. 2109493000"
+    }
+  ],
+  "remove": [
+    {
+      "Name_GR": "Γ.Α.Ν.Α. Ο Άγιος Σάββας - Κέντρο Ηµερήσιας Νοσηλείας «Νίκος Κούρκουλος»",
+      "reason": "day-care centre of Γ.Α.Ν.Α. Ο Άγιος Σάββας, not a hospital of its own in the official list of the 127 ΕΣΥ hospitals (October 2026)"
+    },
+    {
+      "Name_GR": "Γ.Ν. Κατερίνης - Ψυχιατρικός Τομέας (Πρώην ΨΝΠΟ)",
+      "reason": "psychiatric department of Γ.Ν. Κατερίνης, not a hospital of its own in the official list of the 127 ΕΣΥ hospitals (October 2026)"
+    },
+    {
+      "Name_GR": "Γενικό Νοσοκομείο Πατρών - Ειδικό Νοσοκομείο Νοσημάτων Θώρακος Δυτικής Ελλάδας.",
+      "reason": "unit of Γ.Ν. Πατρών «Άγιος Ανδρέας» (same site), not a hospital of its own in the official list of the 127 ΕΣΥ hospitals (October 2026)"
+    }
+  ]
+}
