@@ -21,7 +21,9 @@ const SettlementCensus = db.define('SettlementCensus', {
     // of its community: Π πεδινή, Η ημιορεινή, Ο ορεινή
     mountain: { type: DataTypes.STRING(1), allowNull: true },
     // of its community: 1 αστική, 2 αγροτική
-    urban: { type: DataTypes.TINYINT, allowNull: true }
+    urban: { type: DataTypes.TINYINT, allowNull: true },
+    // tourist accommodation establishments within 3 km in OpenStreetMap (extra information: not beds, a lower bound)
+    acc_osm: { type: DataTypes.INTEGER, allowNull: true }
 }, {
     freezeTableName: true,
     timestamps: false
