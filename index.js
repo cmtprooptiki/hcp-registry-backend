@@ -27,6 +27,7 @@ import { setupPlaces } from "./utils/setupPlaces.js";
 import { setupProviderCoords } from "./utils/setupProviderCoords.js";
 import { setupProviderEdits } from "./utils/setupProviderEdits.js";
 import { setupSettlementAccess } from "./utils/setupSettlementAccess.js";
+import { setupSettlementCensus } from "./utils/setupSettlementCensus.js";
 
 // Models (imported so they are registered before db.sync())
 import "./models/UserModel.js";
@@ -41,6 +42,7 @@ import "./models/KoinotitesModel.js";
 import "./models/OikismoiModel.js";
 import "./models/DataVersionsModel.js";
 import "./models/SettlementAccessModel.js";
+import "./models/SettlementCensusModel.js";
 
 dotenv.config();
 
@@ -152,6 +154,7 @@ const PORT = process.env.PORT || process.env.APP_PORT || 5000;
     const corrected = await setupProviderCoords();         // providers far from the place in their name
     await setupPlaces({ recompute: seededAreas || seededUnits || seededCommunities || seededSettlements || moved > 0 || corrected > 0 });
     await setupSettlementAccess();                         // road distances of the settlements (remote areas)
+    await setupSettlementCensus();                         // census 2021 figures of the settlements (ages, dwellings)
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}...`);
