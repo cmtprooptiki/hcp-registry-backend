@@ -3,7 +3,10 @@
 // Health Centres missing from the original list), fields to set (update, e.g. exact coordinates;
 // a regional clinic of data/iatreia.json is named by its source_id, since that file is imported only once)
 // and providers to remove (remove, e.g. parts of a hospital that the official list does not count as
-// hospitals of their own). Idempotent: a rename whose provider already has the new name, an addition
+// hospitals of their own). Regional clinics (ΠΙ / ΠΠΙ) are named by their source_id in update and remove,
+// and an added one carries a source_id of its own (e.g. MOH2610-01), so that it is grouped with the
+// regional clinics; their update may also change type_Of_Hcp, ype and Name_GR (e.g. a ΠΙ that became a
+// ΠΠΙ, or a ΠΠΙ that became a Health Centre). Idempotent: a rename whose provider already has the new name, an addition
 // whose name already exists or a removal whose provider is already gone is skipped, so editing the file
 // and restarting applies only what is new. The place of an added provider (municipality, unit,
 // settlement, community) is filled by setupPlaces(), which runs last.
@@ -16,13 +19,15 @@ import { normName } from "./setupProviderCoords.js";
 
 export const EDITS_FILE = "provider_edits.json";
 const UPDATE_FIELDS = ["Name_EN", "lat", "lon", "location_accuracy", "address", "post_Code", "email_Contact",
-    "general_Email_Contact", "website"];
+    "general_Email_Contact", "website", "type_Of_Hcp", "ype"];
+// set only on a provider named by its source_id (an original provider is named by its Name_GR: use rename)
+const SOURCE_UPDATE_FIELDS = ["Name_GR"];
 const PLACE_RESET = { dimos: null, dimos_code: null, dimotiki_enotita: null, de_code: null, oikismos: null,
     oikismos_id: null, koinotita: null, koinotita_code: null };
 const ADD_FIELDS = ["ype", "Q4ALL_code", "type_Of_Hcp", "Name_GR", "Name_EN", "category_As_Per_HealthAtlas",
     "category_As_Per_Sha_2011_Elstat", "lat", "lon", "address", "post_Code", "email_Contact", "general_Email_Contact",
     "website", "Idika_Ehr", "Odipy_Inidcator_Collection", "Drg_Mature_Usage", "HEALTH_Center_In_The_Network",
-    "location_accuracy"];
+    "location_accuracy", "source_id"];
 
 // Models that point to a provider by its id. A provider still linked to a user account is not removed
 // (the account must be moved to another provider first); its coordinate fixes are removed with it.
@@ -59,31 +64,36 @@ export const applyProviderEdits = async ({ transaction } = {}) => {
     // Removals first, so that a removed provider's Q4ALL code can be reused by an addition.
     let removed = 0;
     for (const r of records.remove || []) {
-        const found = byName.get(normName(r.Name_GR)) || [];
+        const found = r.source_id
+            ? await HCProviders.findAll({ attributes: ["id"], where: { source_id: r.source_id }, raw: true, transaction })
+            : byName.get(normName(r.Name_GR)) || [];
         if (found.length === 0) continue;   // already removed
         const ids = found.map((p) => p.id);
         const linked = await hcpusers.count({ where: { hcp_id: ids }, transaction });
         if (linked > 0) {
-            skipped.push(`remove: "${r.Name_GR}" is linked to ${linked} user account(s)`);
+            skipped.push(`remove: "${r.source_id || r.Name_GR}" is linked to ${linked} user account(s)`);
             continue;
         }
         await ProviderCoordinateFixes.destroy({ where: { provider_id: ids }, transaction });
         await HCProviders.destroy({ where: { id: ids }, transaction });
-        byName.delete(normName(r.Name_GR));
+        if (!r.source_id) byName.delete(normName(r.Name_GR));
         found.forEach((p) => { const i = providers.indexOf(p); if (i >= 0) providers.splice(i, 1); });
         removed += found.length;
     }
 
     for (const a of records.add || []) {
-        if (byName.has(normName(a.Name_GR))) continue;   // already there
+        if (a.source_id) {   // a regional clinic: already there when its source_id is
+            if (await HCProviders.count({ where: { source_id: a.source_id }, transaction }) > 0) continue;
+        } else if (byName.has(normName(a.Name_GR))) continue;   // already there
         if (a.Q4ALL_code && providers.some((p) => p.Q4ALL_code === a.Q4ALL_code)) {
             skipped.push(`add: "${a.Name_GR}", Q4ALL_code ${a.Q4ALL_code} is already used`);
             continue;
         }
         const row = Object.fromEntries(ADD_FIELDS.filter((k) => a[k] !== undefined).map((k) => [k, a[k]]));
         const created = await HCProviders.create(row, { transaction });
-        byName.set(normName(a.Name_GR), [{ id: created.id, Name_GR: a.Name_GR, Q4ALL_code: a.Q4ALL_code }]);
         added += 1;
+        if (a.source_id) continue;
+        byName.set(normName(a.Name_GR), [{ id: created.id, Name_GR: a.Name_GR, Q4ALL_code: a.Q4ALL_code }]);
     }
     // Fields set on existing providers (e.g. a more exact position). New coordinates clear the place
     // fields, so setupPlaces() finds the municipality, unit, settlement and community again.
@@ -94,7 +104,8 @@ export const applyProviderEdits = async ({ transaction } = {}) => {
             ? await HCProviders.findAll({ attributes: ["id"], where: { source_id: u.source_id }, raw: true, transaction })
             : byName.get(normName(u.Name_GR)) || [];
         if (found.length === 0) { skipped.push(`update: "${u.source_id || u.Name_GR}" not found`); continue; }
-        const fields = Object.fromEntries(UPDATE_FIELDS.filter((k) => k in u).map((k) => [k, u[k]]));
+        const allowed = u.source_id ? [...UPDATE_FIELDS, ...SOURCE_UPDATE_FIELDS] : UPDATE_FIELDS;
+        const fields = Object.fromEntries(allowed.filter((k) => k in u).map((k) => [k, u[k]]));
         if ("lat" in fields || "lon" in fields) Object.assign(fields, PLACE_RESET);
         await HCProviders.update(fields, { where: { id: found.map((p) => p.id) }, transaction });
         updated += found.length;

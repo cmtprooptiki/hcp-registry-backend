@@ -1,5 +1,5 @@
 {
-  "about": "Edits of the original providers (hospitals, Health Centres, TOMY) applied at startup by utils/setupProviderEdits.js, once per version of this file: renames (matched by Name_GR without accents, case and punctuation), providers to add (skipped when a provider with the same name already exists) fields to set on existing providers (update; new lat/lon -> their place is recomputed) and providers to remove (remove; matched by Name_GR, not removed while linked to a user account). Source: lists 'Μονάδες Υγείας ΕΣΥ ανά Κατηγορία' of the 2nd and 4th ΥΠΕ (October 2026). Hospitals: the list 'Νοσοκομεία ΕΣΥ όλες οι ΥΠΕ' (127, October 2026).",
+  "about": "Edits of the original providers (hospitals, Health Centres, TOMY) applied at startup by utils/setupProviderEdits.js, once per version of this file: renames (matched by Name_GR without accents, case and punctuation), providers to add (skipped when a provider with the same name already exists) fields to set on existing providers (update; new lat/lon -> their place is recomputed) and providers to remove (remove; matched by Name_GR, not removed while linked to a user account). Source: lists 'Μονάδες Υγείας ΕΣΥ ανά Κατηγορία' of the 2nd and 4th ΥΠΕ (October 2026). Hospitals: the list 'Νοσοκομεία ΕΣΥ όλες οι ΥΠΕ' (127, October 2026). Regional clinics (ΠΙ / ΠΠΙ) are named by source_id in update / remove; added ones get a source_id MOH2610-NN. Κ.Υ. / Π.Ι. / Π.Π.Ι.: the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026) (only the certain differences).",
   "rename": [
     {
       "from": "Κ.Υ. ΣΑΠΩΝ",
@@ -113,6 +113,52 @@
       "address": "ΦΙΛΙΚΗΣ ΕΤΑΙΡΕΙΑΣ 15, ΙΩΑΝΝΙΝΑ 45444, Greece",
       "post_Code": "45444",
       "note": "was 'ΦΙΛΙΚΗΣ ΕΤΑΙΡΕΙΑΣ 15, ΖΙΤΣΑ 455 00' (wrong town; the unit is in Ioannina, address confirmed by the user 2026-10-19); position unchanged, it was already in Ioannina"
+    },
+    {
+      "source_id": "S0876",
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Ερέτριας",
+      "Name_EN": "Multipurpose Regional Clinic Eretrias",
+      "note": "Π.Ι. converted into a Π.Π.Ι. in 2026 (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)); the Π.Ι. ΕΡΕΤΡΙΑΣ of Φάρσαλα (S0875) stays"
+    },
+    {
+      "source_id": "S0874",
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Ερατεινής",
+      "Name_EN": "Multipurpose Regional Clinic Erateinis",
+      "note": "Π.Ι. converted into a Π.Π.Ι. in 2025 (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026))"
+    },
+    {
+      "source_id": "S0801",
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Αγράφων",
+      "Name_EN": "Multipurpose Regional Clinic Agrafon",
+      "note": "Π.Ι. converted into a Π.Π.Ι. in 2025 (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)); the list gives 6η ΥΠΕ, ype kept 5"
+    },
+    {
+      "source_id": "S1009",
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πεζούλας",
+      "Name_EN": "Multipurpose Regional Clinic Pezoulas",
+      "note": "Π.Ι. listed as Π.Π.Ι. (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026))"
+    },
+    {
+      "source_id": "S0764",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Κ.Υ. ΑΛΟΝΝΗΣΟΥ",
+      "Name_EN": "Health Center Alonnisou",
+      "note": "the Π.Π.Ι. was merged into the new Κ.Υ. ΑΛΟΝΝΗΣΟΥ in 2026 (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026))"
+    },
+    {
+      "source_id": "S1180",
+      "ype": 2,
+      "note": "Σπέτσες belong to the 2nd ΥΠΕ (Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)), was 6"
+    },
+    {
+      "source_id": "S0108",
+      "Name_GR": "ΠΠΙ Μανδρακίου Νισύρου",
+      "Name_EN": "Multipurpose Regional Clinic Mandrakiou Nisyrou",
+      "note": "named as in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026) (Π.Π.Ι. ΜΑΝΔΡΑΚΙΟΥ (ΝΙΣΥΡΟΥ)); same unit"
     }
   ],
   "add": [
@@ -237,6 +283,366 @@
       "post_Code": "17674",
       "website": "https://www.onasseio.gr/",
       "note": "missing from the database (official list: ΩΝΑΣΕΙΟ ΝΟΣΟΚΟΜΕΙΟ, 2η ΥΠΕ, October 2026); position = OSM hospital 'Ωνάσειο Νοσοκομείο' (way 46360706); address from its announcements (hcs.gr); bed category to be confirmed; tel. 2109493000"
+    },
+    {
+      "source_id": "MOH2610-01",
+      "ype": 2,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Αγιάσου",
+      "Name_EN": "Multipurpose Regional Clinic Agiasou",
+      "lat": 39.083456,
+      "lon": 26.372897,
+      "address": "Αγιάσος, Δήμος ΜΥΤΙΛΗΝΗΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-02",
+      "ype": 2,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Γενναδίου",
+      "Name_EN": "Multipurpose Regional Clinic Gennadiou",
+      "lat": 36.024008,
+      "lon": 27.923037,
+      "address": "Γεννάδιον, Δήμος ΡΟΔΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); listed as Π.Π.Ι. ΓΕΝΑΔΙΟΥ"
+    },
+    {
+      "source_id": "MOH2610-03",
+      "ype": 2,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Θυμαινών",
+      "Name_EN": "Multipurpose Regional Clinic Thymainon",
+      "lat": 37.581948,
+      "lon": 26.451068,
+      "address": "Θύμαινα (νησίς), Δήμος ΦΟΥΡΝΩΝ ΚΟΡΣΕΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-04",
+      "ype": 2,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πόρου",
+      "Name_EN": "Multipurpose Regional Clinic Porou",
+      "lat": 37.500028,
+      "lon": 23.454514,
+      "address": "Πόρος, Δήμος ΠΟΡΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-05",
+      "ype": 3,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πέλλας",
+      "Name_EN": "Multipurpose Regional Clinic Pellas",
+      "lat": 40.761782,
+      "lon": 22.525847,
+      "address": "Πέλλα, Δήμος ΠΕΛΛΑΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-06",
+      "ype": 4,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Δοξάτου",
+      "Name_EN": "Multipurpose Regional Clinic Doxatou",
+      "lat": 41.092881,
+      "lon": 24.230147,
+      "address": "Δοξάτον, Δήμος ΔΟΞΑΤΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-07",
+      "ype": 4,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Οφρυνίου",
+      "Name_EN": "Multipurpose Regional Clinic Ofryniou",
+      "lat": 40.79727,
+      "lon": 23.910524,
+      "address": "Οφρύνιον, Δήμος ΠΑΓΓΑΙΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-08",
+      "ype": 4,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Φιλλύρας",
+      "Name_EN": "Multipurpose Regional Clinic Fillyras",
+      "lat": 41.121618,
+      "lon": 25.63355,
+      "address": "Φιλλύρα, Δήμος ΑΡΡΙΑΝΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); listed as Π.Π.Ι. ΦΙΛΥΡΑΣ (Δήμος Αρριανών); ΕΛΣΤΑΤ name Φιλλύρα"
+    },
+    {
+      "source_id": "MOH2610-09",
+      "ype": 4,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Βατοπαιδίου",
+      "Name_EN": "Multipurpose Regional Clinic Vatopaidiou",
+      "lat": 40.314199,
+      "lon": 24.213037,
+      "address": "Μονή Βατοπεδίου, Δήμος ΑΓΙΟ ΟΡΟΣ (ΑΥΤΟΔΙΟΙΚΗΤΟ), Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); Άγιο Όρος; converted from Π.Ι. in 2025 (not in our list as Π.Ι.); point of Μονή Βατοπεδίου"
+    },
+    {
+      "source_id": "MOH2610-10",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Δομβραίνας",
+      "Name_EN": "Multipurpose Regional Clinic Domvrainas",
+      "lat": 38.253421,
+      "lon": 22.982817,
+      "address": "Δομβραίνα, Δήμος ΘΗΒΑΙΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-11",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Παραλίας Διστόμου",
+      "Name_EN": "Multipurpose Regional Clinic Paralias Distomou",
+      "lat": 38.387181,
+      "lon": 22.65512,
+      "address": "Παραλία Διστόμου, Δήμος ΔΙΣΤΟΜΟΥ - ΑΡΑΧΟΒΑΣ - ΑΝΤΙΚΥΡΑΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); conversion of clinics into a Π.Π.Ι. in 2026"
+    },
+    {
+      "source_id": "MOH2610-12",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Καλών Νερών",
+      "Name_EN": "Multipurpose Regional Clinic Kalon Neron",
+      "lat": 39.306159,
+      "lon": 23.119708,
+      "address": "Καλά Νερά, Δήμος ΝΟΤΙΟΥ ΠΗΛΙΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-13",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Νέου Μοναστηρίου",
+      "Name_EN": "Multipurpose Regional Clinic Neou Monastiriou",
+      "lat": 39.243428,
+      "lon": 22.275761,
+      "address": "Νέον Μοναστήριον, Δήμος ΔΟΜΟΚΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-14",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Νίκαιας",
+      "Name_EN": "Multipurpose Regional Clinic Nikaias",
+      "lat": 39.563917,
+      "lon": 22.464038,
+      "address": "Νίκαια, Δήμος ΚΙΛΕΛΕΡ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); the list has both Π.Ι. and Π.Π.Ι. ΝΙΚΑΙΑΣ (Κιλελέρ)"
+    },
+    {
+      "source_id": "MOH2610-15",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πελασγίας",
+      "Name_EN": "Multipurpose Regional Clinic Pelasgias",
+      "lat": 38.948337,
+      "lon": 22.839598,
+      "address": "Πελασγία, Δήμος ΣΤΥΛΙΔΟΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-16",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Ραχών Στυλίδος",
+      "Name_EN": "Multipurpose Regional Clinic Rachon Stylidas",
+      "lat": 38.891035,
+      "lon": 22.781688,
+      "address": "Ράχαι, Δήμος ΣΤΥΛΙΔΟΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); the list has both Π.Ι. and Π.Π.Ι. ΡΑΧΩΝ (Στυλίδος)"
+    },
+    {
+      "source_id": "MOH2610-17",
+      "ype": 5,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Γρανίτσας",
+      "Name_EN": "Multipurpose Regional Clinic Granitsas",
+      "lat": 39.100811,
+      "lon": 21.511097,
+      "address": "Γρανίτσα, Δήμος ΑΓΡΑΦΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); Δήμος Αγράφων, Ευρυτανία: the list gives 6η ΥΠΕ, kept 5 like the other units of Ευρυτανία"
+    },
+    {
+      "source_id": "MOH2610-18",
+      "ype": 6,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πέρδικας",
+      "Name_EN": "Multipurpose Regional Clinic Perdikas",
+      "lat": 39.368132,
+      "lon": 20.303163,
+      "address": "Πέρδικα, Δήμος ΗΓΟΥΜΕΝΙΤΣΑΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-19",
+      "ype": 7,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Αρχανών",
+      "Name_EN": "Multipurpose Regional Clinic Archanon",
+      "lat": 35.235307,
+      "lon": 25.160286,
+      "address": "Επάνω Αρχάναι, Δήμος ΑΡΧΑΝΩΝ - ΑΣΤΕΡΟΥΣΙΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); point of Επάνω Αρχάναι"
+    },
+    {
+      "source_id": "MOH2610-20",
+      "ype": 7,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πλακιά",
+      "Name_EN": "Multipurpose Regional Clinic Plakia",
+      "lat": 35.191923,
+      "lon": 24.392565,
+      "address": "Πλακιάς, Δήμος ΑΓΙΟΥ ΒΑΣΙΛΕΙΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-21",
+      "ype": 7,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Κοκκίνη Χάνι",
+      "Name_EN": "Multipurpose Regional Clinic Kokkini Chani",
+      "lat": 35.330138,
+      "lon": 25.255806,
+      "address": "Χάνιον του Κοκκίνη, Δήμος ΧΕΡΣΟΝΗΣΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); listed as Π.Π.Ι. ΚΟΚΚΙΝΗ (Δήμος Χερσονήσου); ΕΛΣΤΑΤ name Χάνιον του Κοκκίνη"
+    },
+    {
+      "source_id": "MOH2610-22",
+      "ype": 7,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Πλατανιά",
+      "Name_EN": "Multipurpose Regional Clinic Platania",
+      "lat": 35.517878,
+      "lon": 23.908791,
+      "address": "Πλατανιάς, Δήμος ΠΛΑΤΑΝΙΑ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-23",
+      "ype": 7,
+      "type_Of_Hcp": "Multipurpose Regional Clinic",
+      "Name_GR": "ΠΠΙ Τυμπακίου",
+      "Name_EN": "Multipurpose Regional Clinic Tympakiou",
+      "lat": 35.072076,
+      "lon": 24.76735,
+      "address": "Τυμπάκιον, Δήμος ΦΑΙΣΤΟΥ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "MOH2610-24",
+      "ype": 7,
+      "type_Of_Hcp": "Regional Clinic",
+      "Name_GR": "Π.Ι. ΑΣΚΥΦΟΥ",
+      "Name_EN": "Regional Clinic Askyfou",
+      "lat": 35.292017,
+      "lon": 24.175832,
+      "address": "Αμμουδάριον, Δήμος ΣΦΑΚΙΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); founded 2026; the ΕΛΣΤΑΤ list has no settlement Άσκυφος: point of Αμμουδάριον, the main village of the Askyfou plateau"
+    },
+    {
+      "source_id": "MOH2610-25",
+      "ype": 7,
+      "type_Of_Hcp": "Regional Clinic",
+      "Name_GR": "Π.Ι. ΤΣΟΥΤΣΟΥΡΟΥ",
+      "Name_EN": "Regional Clinic Tsoutsourou",
+      "lat": 34.98661,
+      "lon": 25.286019,
+      "address": "Τσούτσουρος, Δήμος ΜΙΝΩΑ ΠΕΔΙΑΔΑΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); founded 2025"
+    },
+    {
+      "source_id": "MOH2610-26",
+      "ype": 7,
+      "type_Of_Hcp": "Regional Clinic",
+      "Name_GR": "Π.Ι. ΣΤΑΒΙΩΝ",
+      "Name_EN": "Regional Clinic Stavion",
+      "lat": 35.004318,
+      "lon": 25.033441,
+      "address": "Στάβιαι, Δήμος ΓΟΡΤΥΝΑΣ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); ΕΛΣΤΑΤ name Στάβιαι"
+    },
+    {
+      "source_id": "MOH2610-27",
+      "ype": 6,
+      "type_Of_Hcp": "Regional Clinic",
+      "Name_GR": "Π.Ι. ΛΑΚΚΑΣ ΠΑΞΩΝ",
+      "Name_EN": "Regional Clinic Lakkas Paxon",
+      "lat": 39.237847,
+      "lon": 20.132406,
+      "address": "Λάκκα, Δήμος ΠΑΞΩΝ, Greece",
+      "location_accuracy": "Settlement",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); our list had only Π.Ι. ΛΑΚΚΑΣ of Αιγιάλεια"
+    },
+    {
+      "ype": 1,
+      "Q4ALL_code": "Y1 P413",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Κ.Υ. ΜΕΤΑΜΟΡΦΩΣΗΣ",
+      "Name_EN": "Health Center Metamorfosis",
+      "lat": 38.061479,
+      "lon": 23.761852,
+      "address": "Μεταμόρφωσις, Δήμος ΜΕΤΑΜΟΡΦΩΣΕΩΣ, Greece",
+      "location_accuracy": "Town centre",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); founded 2026 (ΣΥΣΤΑΣΗ 2026); position = the ΕΛΣΤΑΤ point of Μεταμόρφωσις until the building is known"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2 P414",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Ε.Κ.Υ. ΚΟΡΥΔΑΛΛΟΥ",
+      "Name_EN": "Special Health Center Korydallou",
+      "lat": 37.976333,
+      "lon": 23.651922,
+      "address": "Κορυδαλλός, Δήμος ΚΟΡΥΔΑΛΛΟΥ, Greece",
+      "location_accuracy": "Town centre",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); added 11/8/2025; the special Health Centre of the Korydallos prisons (serves the detainees); position = the ΕΛΣΤΑΤ point of Κορυδαλλός until the building is known"
+    },
+    {
+      "ype": 2,
+      "Q4ALL_code": "Y2 P415",
+      "type_Of_Hcp": "Health Centre",
+      "Name_GR": "Κ.Υ. ΑΝΤΙΜΑΧΕΙΑΣ",
+      "Name_EN": "Health Center Antimacheias",
+      "lat": 36.814795,
+      "lon": 27.09833,
+      "address": "Αντιμάχεια, Δήμος ΚΩ, Greece",
+      "location_accuracy": "Settlement centre",
+      "note": "missing from our list, in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026); the list also keeps Π.Ι. ΑΝΤΙΜΑΧΕΙΑΣ; position = the ΕΛΣΤΑΤ point of Αντιμάχεια until the building is known"
     }
   ],
   "remove": [
@@ -251,6 +657,21 @@
     {
       "Name_GR": "Γενικό Νοσοκομείο Πατρών - Ειδικό Νοσοκομείο Νοσημάτων Θώρακος Δυτικής Ελλάδας.",
       "reason": "unit of Γ.Ν. Πατρών «Άγιος Ανδρέας» (same site), not a hospital of its own in the official list of the 127 ΕΣΥ hospitals (October 2026)"
+    },
+    {
+      "source_id": "S0117",
+      "Name_GR": "ΠΠΙ Σύμης",
+      "reason": "became Κ.Υ. ΣΥΜΗΣ (31.10.2022, added above); not in the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026)"
+    },
+    {
+      "source_id": "S0810",
+      "Name_GR": "Π.Ι. ΑΜΠΕΛΩΝΑ",
+      "reason": "duplicate of ΠΠΙ Αμπελώνα (S0765, same point); the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026) has only the Π.Π.Ι."
+    },
+    {
+      "source_id": "S1058",
+      "Name_GR": "Π.Ι. ΤΡΙΚΕΡΙΟΥ",
+      "reason": "duplicate of ΠΠΙ Τρικερίου (S0775, same point); the Ministry of Health list of Κ.Υ. / Π.Ι. / Π.Π.Ι. (October 2026) has only the Π.Π.Ι."
     }
   ]
 }
