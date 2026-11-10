@@ -14,10 +14,15 @@ let meta = null;
 
 export const accessMeta = () => meta;
 
-// Fingerprint of the providers' ids, types and positions; compute_access.py writes the same one for the
-// providers it used, so a difference means that the distances must be recomputed.
-export const providersFingerprint = async () => {
-    const rows = await HCProviders.findAll({ attributes: ["id", "type_Of_Hcp", "lat", "lon"], order: [["id", "ASC"]], raw: true });
+// Fingerprint of the providers' ids, types and positions (of the given types, or all); compute_access.py and
+// compute_hc_hospitals.py write the same one for the providers they used, so a difference means that the
+// distances must be recomputed.
+export const providersFingerprint = async (types = null) => {
+    const rows = await HCProviders.findAll({
+        attributes: ["id", "type_Of_Hcp", "lat", "lon"],
+        ...(types ? { where: { type_Of_Hcp: types } } : {}),
+        order: [["id", "ASC"]], raw: true,
+    });
     const lines = rows
         .filter((r) => r.lat !== null && r.lon !== null)
         .map((r) => `${r.id}|${r.type_Of_Hcp}|${Number(r.lat).toFixed(5)}|${Number(r.lon).toFixed(5)}`);
