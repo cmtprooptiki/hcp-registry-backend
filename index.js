@@ -18,6 +18,7 @@ import OikismoiRoute from "./routes/OikismoiRoute.js";
 import DimotikesEnotitesRoute from "./routes/DimotikesEnotitesRoute.js";
 import KoinotitesRoute from "./routes/KoinotitesRoute.js";
 import AccessRoute from "./routes/AccessRoute.js";
+import PopulationRoute from "./routes/PopulationRoute.js";
 import { setupDimoi } from "./utils/setupDimoi.js";
 import { prepareDimotikesEnotites } from "./utils/setupDimotikesEnotites.js";
 import { prepareKoinotites } from "./utils/setupKoinotites.js";
@@ -100,6 +101,7 @@ app.use(OikismoiRoute);
 app.use(DimotikesEnotitesRoute);
 app.use(KoinotitesRoute);
 app.use(AccessRoute);
+app.use(PopulationRoute);
 
 // Socket.IO setup
 const io = new Server(server, {

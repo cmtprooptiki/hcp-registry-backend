@@ -35,3 +35,17 @@ islands) show few holiday homes; `acc_osm` shows them.
 
 Settlements are matched by code: the 10 last digits of the ΕΛΣΤΑΤ settlement code are
 `Oikismoi.census_code`, the 8 last digits of the community code are `Oikismoi.koinotita_code`.
+
+## Population by age group of the regional units and municipalities
+
+`data/population_ages.json`: population by 5-year age group (0-4 … 70-74, 75+), both sexes / men / women, of
+every regional unit (Π.Ε.) and municipality, and of the whole country: ΕΛΣΤΑΤ's own rows of the SAM03 table
+(not sums of settlements). Served by `GET /population/ages?level=pe|dimos` (no table) for the «Πληθυσμός ανά
+ηλικία» tab of the map page. Rebuild from the same SAM03 file:
+
+```bash
+python3 scripts/census/build_ages.py SAM03_C01.xlsx
+```
+
+The last group of the table is 75+ (no 80+ / 85+). ΕΛΣΤΑΤ's disclosure control makes the groups (or men +
+women) differ from the total by a few persons.
