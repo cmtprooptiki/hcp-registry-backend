@@ -75,3 +75,20 @@ facts the view's exclusions use (the view switches them on and off, nothing is r
   the four sectors of Athens and Piraeus plus suburbs of East / West Attica, the municipalities and municipal
   units of the Thessaloniki urban area). Edit the list and run the script to change it.
 - No road to any hospital (islands): `air_km` / `air_hospital` = the nearest one in a straight line.
+
+## Programme: eligible settlements → Κ.Υ. / Π.Π.Ι. (`compute_program_units.py`)
+
+For the «Πρόγραμμα: μονάδες & οικισμοί» tab: every eligible settlement (remote with the programme's criteria:
+inhabited, < 10.000 residents, > 14 km by road from every Hospital / Κ.Υ. / ΤΟΜΥ / Π.Π.Ι., read from
+`data/settlement_access.json`) is assigned to ONE unit, so no population is counted twice, and gets its
+residents aged 50+ by group (ΕΛΣΤΑΤ SAM03, settlement rows).
+
+- Units: Κ.Υ., Π.Π.Ι. and the hospitals that are also a Health Centre (Γ.Ν. - Κ.Υ.).
+- Rule (an estimate: no official areas of responsibility exist in the data): the unit nearest by road; a settlement
+  with no road to any unit (island) goes to the unit nearest in a straight line (`rule: "air"`).
+
+```bash
+python3 scripts/access/compute_program_units.py SAM03_C01.xlsx   # after compute_access.py, ~40 s
+```
+
+`GET /access/program-units` serves it with the names / ΥΠΕ of the units; `meta.stale` when the providers changed.
